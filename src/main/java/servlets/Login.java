@@ -69,9 +69,6 @@ public class Login extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
-//        PrintStream fileOut = new PrintStream(new File("C:/CSD/PENDING/HY-359/Assignment3/Ask2/src/main/java/database/logfile.txt"));
-//        System.setOut(fileOut);
-
         String requestString = "";
 
         BufferedReader in = new BufferedReader(new InputStreamReader(request.getInputStream()));
