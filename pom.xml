@@ -3,11 +3,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.mycompany</groupId>
-    <artifactId>Ask2</artifactId>
+    <artifactId>CS359-PROJECT</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>war</packaging>
 
-    <name>Ask2</name>
+    <name>CS359-PROJECT</name>
 
     <properties>
         <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
