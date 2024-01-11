@@ -1,0 +1,4 @@
+giannissssaaaa1111!A
+giannissssaaaa1111!A
+UPDATE petkeepers SET password='aaaa1111!A',firstname='GiannisA',lastname='PetsisA',birthdate='1980-01-01',gender='Male',country='GR',city='HeraklionAA',address='KalokairinouA',personalpage='https://page.com',job='StudentA',telephone='694837823423',lat='35.3383593',lon='25.1297921',property='Both',propertydescription='Desc',catkeeper='true',dogkeeper='true',catprice='10',dogprice='12' WHERE username = 'giannissss'
+# The pet keeper was successfully updated in the database.

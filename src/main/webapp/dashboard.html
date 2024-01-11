@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>DashBoard</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        <link href="css/style.css" rel="stylesheet" type="text/css"/>
+        
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+        <script src="js/dashboard.js"></script>
+
+    </head>
+    <body>
+        <h1>Welcome</h1>
+        
+        <div id="ajaxContent">
+            <div>
+                <input type="button" id="logout-button" onclick="handle_logout()" value="Logout">
+                <input type="button" id="edit-to-database-button" onclick="edit_database()" value="Save changes">
+            </div>
+            <div id="ajaxMessagesDiv"></div>
+        </div>
+    </body>
+</html>
