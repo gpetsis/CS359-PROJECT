@@ -4,11 +4,11 @@
         <servlet-name>Register</servlet-name>
         <servlet-class>servlets.Register</servlet-class>
     </servlet>
-<!--    <servlet>
+    <!--    <servlet>
         <servlet-name>Dog_Servlet</servlet-name>
         <servlet-class>servlets.Dog_Servlet</servlet-class>
     </servlet>
--->    
+-->
     <servlet>
         <servlet-name>Login</servlet-name>
         <servlet-class>servlets.Login</servlet-class>
@@ -26,15 +26,21 @@
         <servlet-name>GetStatistics</servlet-name>
         <servlet-class>servlets.GetStatistics</servlet-class>
     </servlet>
--->    <servlet-mapping>
+-->
+    <servlet>
+        <servlet-name>Admin</servlet-name>
+        <servlet-class>servlets.Admin</servlet-class>
+    </servlet>
+    <servlet-mapping>
         <servlet-name>Register</servlet-name>
         <url-pattern>/Register</url-pattern>
-    </servlet-mapping><!--
+    </servlet-mapping>
+    <!--
     <servlet-mapping>
         <servlet-name>Dog_Servlet</servlet-name>
         <url-pattern>/Dog_Servlet</url-pattern>
     </servlet-mapping>
--->    
+-->
     <servlet-mapping>
         <servlet-name>Login</servlet-name>
         <url-pattern>/Login</url-pattern>
@@ -58,4 +64,8 @@
             <max-age>11520</max-age>
         </cookie-config>
     </session-config>-->
+    <servlet-mapping>
+        <servlet-name>Admin</servlet-name>
+        <url-pattern>/Admin</url-pattern>
+    </servlet-mapping>
 </web-app>
