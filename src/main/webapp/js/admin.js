@@ -1,6 +1,10 @@
+var numberOfCats;
+var numberOfDogs;
+
 $(document).ready(function() {
     if(window.location.href == 'http://localhost:8080/Ask2/admindashboard.html') {
         console.log("Here");
+        
         var xhr = new XMLHttpRequest();
         xhr.onload = function () {
             if (xhr.readyState === 4 && xhr.status === 200) {
@@ -17,8 +21,71 @@ $(document).ready(function() {
         xhr.open('GET', 'Admin');
         xhr.setRequestHeader("Content-type", "application/json");
         xhr.send();
+        loadStatistics();
     }
 })
+
+function getNumberOfPets(type) {
+    var xhr = new XMLHttpRequest();
+    var number;
+    xhr.onload = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            var response = xhr.responseText;
+            console.log(response);
+            if(type == "Dogs") {
+                numberOfDogs = parseInt(response);
+            } else {
+                numberOfCats = parseInt(response);
+            }
+        } else if (xhr.status !== 200) {
+            return;
+        }
+    };
+
+    xhr.open('GET', 'Login');
+    xhr.setRequestHeader("Content-type", "application/json");
+    xhr.setRequestHeader("Request-Type", "Number-Of-" + type);
+    xhr.send();
+}
+
+function loadStatistics() {
+    google.charts.load('current', {'packages':['corechart']});
+
+    google.charts.setOnLoadCallback(initialize);
+    
+    getNumberOfPets("Cats");
+    getNumberOfPets("Dogs");
+
+//    initialize();
+
+}
+
+function drawChart() {
+    console.log(numberOfCats, numberOfDogs);
+
+    var data = new google.visualization.DataTable();
+    data.addColumn('string', 'Pet');
+    data.addColumn('number', '# of pets');
+    data.addRows([
+        ['Cats', numberOfCats],
+        ['Dogs', numberOfDogs]
+    ]);
+
+    var options = {
+        title: 'Total number of pets',
+        backgroundColor: {
+            fill: 'darkslategrey'
+        }
+    };
+
+    var chart = new google.visualization.BarChart(document.getElementById('chart'));
+    chart.draw(data, options);
+}
+
+async function initialize() {
+    await new Promise(r => setTimeout(r, 500));
+    drawChart();
+}
 
 function handle_admin_login() {
     var username = document.getElementById("username").value;

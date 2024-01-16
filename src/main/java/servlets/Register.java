@@ -16,8 +16,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import database.EditPetOwnersTable;
 import database.EditPetKeepersTable;
-import java.io.File;
-import java.io.PrintStream;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import javax.servlet.http.HttpSession;
@@ -55,8 +53,6 @@ public class Register extends HttpServlet {
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        PrintStream fileOut = new PrintStream(new File("C:\\Users\\Nikos Lasithiotakis\\Desktop\\CSD\\5ο Εξάμηνο\\ΗΥ359\\CS359-PROJECT\\src\\main\\java\\database\\logfile.txt"));
-        System.setOut(fileOut);
         String getType = request.getHeader("User");
         System.out.println(getType);
         HttpSession session = request.getSession();
@@ -100,8 +96,6 @@ public class Register extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        PrintStream fileOut = new PrintStream(new File("C:\\Users\\Nikos Lasithiotakis\\Desktop\\CSD\\5ο Εξάμηνο\\ΗΥ359\\CS359-PROJECT\\src\\main\\java\\database\\logfile.txt"));
-        System.setOut(fileOut);
         String getUserType = request.getHeader("User");
         System.out.println(getUserType);
         HttpSession session = request.getSession();

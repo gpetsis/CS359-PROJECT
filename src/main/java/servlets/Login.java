@@ -7,8 +7,8 @@ package servlets;
 
 import database.EditPetKeepersTable;
 import database.EditPetOwnersTable;
+import database.EditPetsTable;
 import java.io.BufferedReader;
-import java.io.File;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -16,7 +16,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.PrintStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import mainClasses.PetKeeper;
@@ -49,18 +48,38 @@ public class Login extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        HttpSession session=request.getSession();
-        if(session.getAttribute("loggedIn")!=null){
-            response.setStatus(200);
-//           Person p=Resources.registeredUsers.get(session.getAttribute("loggedIn").toString());
-//           response.getWriter().write(p.getUsername());
-        }
-        else{
-            response.setStatus(403);
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+//        PrintStream fileOut = new PrintStream(new File("C:\\CSD\\PENDING\\HY-359\\PROJECT\\CS359-PROJECT\\src\\main\\webapp\\logfile.txt"));
+//        System.setOut(fileOut);
+        String header = request.getHeader("Request-Type");
+        if (header.equals("Number-Of-Cats")) {
+            handleNumberOfCats(request, response);
+        } else if (header.equals("Number-Of-Dogs")) {
+            handleNumberOfDogs(request, response);
+        } else {
+            HttpSession session = request.getSession();
+            if (session.getAttribute("loggedIn") != null) {
+                response.setStatus(200);
+            } else {
+                response.setStatus(403);
+            }
         }
     }
+
+    public void handleNumberOfCats(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        EditPetsTable ept = new EditPetsTable();
+        int numberOfCats = ept.numberOfCats();
+        response.getWriter().write(String.valueOf(numberOfCats));
+        System.out.println(numberOfCats);
+    }
+
+    public void handleNumberOfDogs(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        EditPetsTable ept = new EditPetsTable();
+        int numberOfDogs = ept.numberOfDogs();
+        response.getWriter().write(String.valueOf(numberOfDogs));
+        System.out.println(numberOfDogs);
+    }
+
 
     /**
      * Handles the HTTP <code>POST</code> method.
@@ -72,8 +91,6 @@ public class Login extends HttpServlet {
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        PrintStream fileOut = new PrintStream(new File("C:\\Users\\Nikos Lasithiotakis\\Desktop\\CSD\\5ο Εξάμηνο\\ΗΥ359\\CS359-PROJECT\\src\\main\\java\\database\\logfile.txt"));
-        System.setOut(fileOut);
         String getUserType = request.getHeader("User");
         System.out.println(getUserType);
         HttpSession session = request.getSession();
