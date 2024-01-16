@@ -1,0 +1,31 @@
+<html>
+    <head>
+        <title>Pet Owner Login</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" type ="text/css" href ="css/style.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    </head>
+    <body style="text-align: center;">
+        <form id="petOwnerLogin" onsubmit="return handlePetOwnerLogin()">
+            <h1>Pet Owner Login</h1>
+            <div>
+                <label><b>Username</b></label>
+                <input id="username" type="text" placeholder="Enter Username" name="username" required>
+            </div>
+            <div>
+                <label><b>Password</b></label>
+                <input id="password" type="password" placeholder="Enter Password" name="password" required>
+            </div>
+            <br>
+            <button type="button" id="showpassword">Show Password</button><br>
+            <br>
+            <div>
+                <button id="loginbutton" type="submit" class="loginbutton">Login</button>
+            </div>
+            <div id="ajaxContent"></div>
+            <script src="js/petOwnerLogin.js"></script>
+
+        </form>
+    </body>
+</html>
