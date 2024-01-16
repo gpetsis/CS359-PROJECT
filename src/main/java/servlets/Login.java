@@ -8,7 +8,6 @@ package servlets;
 import database.EditPetKeepersTable;
 import database.EditPetOwnersTable;
 import java.io.BufferedReader;
-import java.io.File;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -16,7 +15,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.PrintStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import mainClasses.PetKeeper;
@@ -72,8 +70,6 @@ public class Login extends HttpServlet {
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        PrintStream fileOut = new PrintStream(new File("C:\\Users\\Nikos Lasithiotakis\\Desktop\\CSD\\5ο Εξάμηνο\\ΗΥ359\\CS359-PROJECT\\src\\main\\java\\database\\logfile.txt"));
-        System.setOut(fileOut);
         String getUserType = request.getHeader("User");
         System.out.println(getUserType);
         HttpSession session = request.getSession();
