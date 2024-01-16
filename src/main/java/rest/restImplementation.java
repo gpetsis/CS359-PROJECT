@@ -2,6 +2,8 @@ package rest;
 
 import com.google.gson.Gson;
 import database.EditPetsTable;
+import java.io.File;
+import java.io.PrintStream;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.NoSuchElementException;
@@ -73,7 +75,8 @@ class PostHandler implements Route {
 
     @Override
     public Object handle(Request request, Response response) throws Exception {
-
+        PrintStream fileOut = new PrintStream(new File("C:\\Users\\Nikos Lasithiotakis\\Desktop\\CSD\\5ο Εξάμηνο\\ΗΥ359\\CS359-PROJECT\\src\\main\\java\\database\\logfile.txt"));
+        System.setOut(fileOut);
         try {
             EditPetsTable editPets = new EditPetsTable();
             Exception addPetFromJSON = editPets.addPetFromJSON(request.body());

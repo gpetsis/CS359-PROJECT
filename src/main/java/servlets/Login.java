@@ -6,7 +6,9 @@
 package servlets;
 
 import database.EditPetKeepersTable;
+import database.EditPetOwnersTable;
 import java.io.BufferedReader;
+import java.io.File;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -14,9 +16,11 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import mainClasses.PetKeeper;
+import mainClasses.PetOwner;
 
 public class Login extends HttpServlet {
 
@@ -68,10 +72,11 @@ public class Login extends HttpServlet {
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        PrintStream fileOut = new PrintStream(new File("C:\\Users\\Nikos Lasithiotakis\\Desktop\\CSD\\5ο Εξάμηνο\\ΗΥ359\\CS359-PROJECT\\src\\main\\java\\database\\logfile.txt"));
+        System.setOut(fileOut);
+        String getUserType = request.getHeader("User");
+        System.out.println(getUserType);
         HttpSession session = request.getSession();
-//        PrintStream fileOut = new PrintStream(new File("C:/CSD/PENDING/HY-359/Assignment3/Ask2/src/main/java/database/logfile.txt"));
-//        System.setOut(fileOut);
-
         String requestString = "";
 
         BufferedReader in = new BufferedReader(new InputStreamReader(request.getInputStream()));
@@ -81,23 +86,45 @@ public class Login extends HttpServlet {
             line = in.readLine();
         }
 
-        EditPetKeepersTable epk = new EditPetKeepersTable();
-        PetKeeper keeper = epk.jsonToPetKeeper(requestString);
-        System.out.println(keeper.getUsername() + keeper.getPassword());
+        if (getUserType.equals("PetOwner")) {
+            EditPetOwnersTable epo = new EditPetOwnersTable();
+            PetOwner owner = epo.jsonToPetOwner(requestString);
+            System.out.println(owner.getUsername() + owner.getPassword());
 
-        try {
-            keeper = epk.databaseToPetKeepers(keeper.getUsername(), keeper.getPassword());
-            System.out.println(keeper.getUsername() + keeper.getPassword());
-            if (keeper != null) {
-                session.setAttribute("loggedIn", keeper.getUsername());
-                response.setStatus(200);
-            } else {
+            try {
+                owner = epo.databaseToPetOwners(owner.getUsername(), owner.getPassword());
+                System.out.println(owner.getUsername() + owner.getPassword());
+                if (owner != null) {
+                    session.setAttribute("loggedIn", owner.getUsername());
+                    response.setStatus(200);
+                } else {
+                    response.setStatus(403);
+                }
+
+            } catch (Exception ex) {
+                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
                 response.setStatus(403);
             }
 
-        } catch (Exception ex) {
-            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
-            response.setStatus(403);
+        } else {
+            EditPetKeepersTable epk = new EditPetKeepersTable();
+            PetKeeper keeper = epk.jsonToPetKeeper(requestString);
+            System.out.println(keeper.getUsername() + keeper.getPassword());
+
+            try {
+                keeper = epk.databaseToPetKeepers(keeper.getUsername(), keeper.getPassword());
+                System.out.println(keeper.getUsername() + keeper.getPassword());
+                if (keeper != null) {
+                    session.setAttribute("loggedIn", keeper.getUsername());
+                    response.setStatus(200);
+                } else {
+                    response.setStatus(403);
+                }
+
+            } catch (Exception ex) {
+                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+                response.setStatus(403);
+            }
         }
     }
 

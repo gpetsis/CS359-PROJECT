@@ -1,0 +1,85 @@
+<html>
+    <head>
+        <title>Welcome</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+        <script src="js/petOwnerLoggedIn.js"></script>
+        <link rel="stylesheet" type ="text/css" href ="css/style.css">
+    </head>
+    <body>
+        <div id="ajaxContent"></div>
+        <div id="newAjaxContent"></div>
+        <button id="edit" onclick="getDataFromTable()">Edit</button>
+        <form id="petsForm" onsubmit="return handlePost()">
+            <h1>Καταχώρηση κατοικιδίου</h1>
+            <div>
+                <label><b>pet_id</b></label>
+                <input type="text" id="pet_id" name="pet_id" required pattern="\d{10}" title="Please enter exactly 10 digits." placeholder="Enter pet_id">
+            </div>
+
+            <div>
+                <label><b>owner_id</b></label>
+                <input type="text" id="owner_id" name="owner_id" required pattern="[0-9]+" placeholder="Enter owner_id">
+            </div>
+            
+            <div>
+                <label><b>Name</b></label>
+                <input type="text" id="name" name="name" required placeholder="Enter name">
+            </div>
+            
+            <div>
+                <label><b>Type</b></label>
+                <br>
+                <input type="radio" id="cat" name="type" value="cat" required>
+                <label>Cat</label><br>
+                <input type="radio" id="dog" name="type" value="dog" required>
+                <label>Dog</label><br>
+            </div>
+            
+            <div>
+                <label><b>Breed</b></label>
+                <input type="text" id="breed" name="breed" required placeholder="Enter breed">
+            </div>
+            
+            <div>
+                <label><b>Gender</b></label>
+                <br>
+                <input id="male" type="radio" name="gender" value="male" required>
+                <label>Male</label><br>
+                <input id="female" type="radio" name="gender" value="female" required>
+                <label>Female</label><br>
+            </div>
+            
+            <div>
+                <label><b>Birth Year</b></label>
+                <input id="birthyear" type="number" name="birthyear" value="2000" min="2000" max="2023" placeholder="Enter birth year">
+            </div>
+            
+            <div> 
+                <label><b>Weight</b></label>
+                <input type="text" id="weight" name="weight" required pattern="[1-9]\d*" placeholder="Enter weight">
+            </div>
+            
+            <div>
+                <label><b>Description</b></label>
+                <br>
+                <textarea id="description" name="description" rows="4" cols="50"></textarea>
+            </div>
+            
+            <div>
+                <label>Photo</label>
+                <input type="url" name="photo" id="photo" title="Enter photo" pattern="https://.*">
+            </div>
+            
+            <div>
+                <button id="postButton" type="submit" class="postButton">Post</button>
+            </div>
+            
+            <div id="ajaxContent2"></div>
+            
+        </form>
+        <button id="logout" onclick="logout()">Logout</button>
+        <br><br><br>
+    </body>
+</html>
