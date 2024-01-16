@@ -16,10 +16,15 @@ function findUserData(){
     xhr.send();
 }
 
+var owner_id;
+
 function createTableFromJSON(data) {
     var html = "<table id='newTable'>";
     for (const category in data) {
         var value = data[category];
+        if(category == "owner_id"){
+            owner_id = value;
+        }
         if (category == "username" || category == "email" || category == "owner_id") {
             html += "<tr><td>" + category + "</td><td>" + value + "</td></tr>";
         } else {
@@ -173,4 +178,49 @@ function handlePost() {
     xhr.setRequestHeader("Content-type", "application/json");
     xhr.send(JSON.stringify(data));
     return false;
+}
+
+function checkPet(){
+    console.log(owner_id);
+    var xhr = new XMLHttpRequest();
+    xhr.onload = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            console.log(xhr.responseText);
+            showAvailableKeepers(xhr.responseText);
+        } else if (xhr.status !== 200) {
+            $("#ajaxContent3").html("You don't have a pet");
+            return;
+        }
+    };
+    console.log("Called Pet");
+    xhr.open('GET', 'Pet');
+    xhr.setRequestHeader("owner_id", owner_id);
+    xhr.setRequestHeader("Content-type", "application/json");
+    xhr.send();
+}
+
+function showAvailableKeepers(type){
+    var xhr = new XMLHttpRequest();
+    xhr.onload = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            var users = JSON.parse(xhr.responseText);
+            console.log(users);
+            $("#ajaxContent3").html(createTableFromJSONKeepers(users));
+        } else if (xhr.status !== 200) {
+            return;
+        }
+    };
+    xhr.open('GET', 'LoggedIn');
+    xhr.setRequestHeader("Type", type);
+    xhr.setRequestHeader("Content-type", "application/json");
+    xhr.send();
+}
+
+function createTableFromJSONKeepers(data) {
+    var html = "<table id='myTable'><tr><th>Username</th><th>Name</th></tr>";
+    for(var i = 0; i < data.length; i++) {
+        html += "<tr><td>" + data[i]["email"] + "</td><td>" + data[i]["firstname"] + "</td>";
+    }
+    html += "</table>";
+    return html;
 }
