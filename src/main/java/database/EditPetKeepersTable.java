@@ -43,7 +43,13 @@ public class EditPetKeepersTable {
         return json;
     }
     
-   
+    public void deletePetKeeper(String id) throws SQLException, ClassNotFoundException {
+        Connection con = DB_Connection.getConnection();
+        Statement stmt = con.createStatement();
+        String update = "DELETE FROM petkeepers WHERE keeper_id=" + id;
+        stmt.executeUpdate(update);
+    }
+
     
     public void updatePetKeeper(String username,String personalpage) throws SQLException, ClassNotFoundException{
         Connection con = DB_Connection.getConnection();

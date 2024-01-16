@@ -42,7 +42,12 @@ public class EditPetOwnersTable {
         return json;
     }
     
-   
+    public void deletePetOwner(String id) throws SQLException, ClassNotFoundException {
+        Connection con = DB_Connection.getConnection();
+        Statement stmt = con.createStatement();
+        String update = "DELETE FROM petowners WHERE owner_id=" + id;
+        stmt.executeUpdate(update);
+    }
     
     public void updatePetOwner(String username,String personalpage) throws SQLException, ClassNotFoundException{
         Connection con = DB_Connection.getConnection();
