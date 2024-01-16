@@ -31,7 +31,6 @@ function createTableFromJSON(data) {
     }
     html += "</table>";
     return html;
-
 }
 
 function handle_logout() {

@@ -20,6 +20,10 @@ public class PetOwner {
     String telephone;
     String personalpage;
 
+    public String getOwnerId() {
+        return String.valueOf(owner_id);
+    }
+
     public String getPersonalpage() {
         return personalpage;
     }
