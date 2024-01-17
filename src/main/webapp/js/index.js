@@ -158,3 +158,29 @@ function restTest2() {
 //    xhr.setRequestHeader("Content-Type", "application/json");
     xhr.send();
 }
+
+$(document).ready(function() {
+    var xhr = new XMLHttpRequest();
+    xhr.onload = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            var users = JSON.parse(xhr.responseText);
+            console.log(users);
+            $("#keepers").html(createTableFromJSONKeepers(users));
+        } else if (xhr.status !== 200) {
+            return;
+        }
+    };
+    xhr.open('GET', 'Admin');
+    xhr.setRequestHeader("Type", "GuestPage");
+    xhr.setRequestHeader("Content-type", "application/json");
+    xhr.send();
+})
+
+function createTableFromJSONKeepers(data) {
+    var html = "<table id='myTable'><tr><th>Username</th><th>Email</th></tr>";
+    for(var i = 0; i < data.length; i++) {
+        html += "<tr><td>" + data[i]["username"] + "</td><td>" + data[i]["email"] + "</td>";
+    }
+    html += "</table>";
+    return html;
+}
