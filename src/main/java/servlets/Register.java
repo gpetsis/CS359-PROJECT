@@ -116,9 +116,7 @@ public class Register extends HttpServlet {
             EditPetOwnersTable epo = new EditPetOwnersTable();
             PetOwner owner = epo.jsonToPetOwner(requestString);
             try {
-                response.getWriter().println("Started updating");
                 returnEx = epo.updatePetOwner(owner);
-                response.getWriter().println("Completed");
                 response.setStatus(200);
             } catch (Exception ex) {
                 response.setStatus(406);
