@@ -38,16 +38,19 @@ public class Admin extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
+            String type = request.getHeader("Type");
             EditPetOwnersTable epo = new EditPetOwnersTable();
             EditPetKeepersTable epk = new EditPetKeepersTable();
             ArrayList<PetOwner> owners = epo.getOwners();
             ArrayList<PetKeeper> keepers = epk.getKeepers("catkeeper");
             ArrayList<String> users = new ArrayList<String>();
             keepers.addAll(epk.getKeepers("dogkeeper"));
-            for (int i = 0; i < owners.size(); i++) {
-                PetOwner owner = owners.get(i);
-                String ownerJSON = epo.petOwnerToJSON(owner);
-                users.add(ownerJSON);
+            if (!type.equals("GuestPage")) {
+                for (int i = 0; i < owners.size(); i++) {
+                    PetOwner owner = owners.get(i);
+                    String ownerJSON = epo.petOwnerToJSON(owner);
+                    users.add(ownerJSON);
+                }
             }
             for (int i = 0; i < keepers.size(); i++) {
                 PetKeeper keeper = keepers.get(i);

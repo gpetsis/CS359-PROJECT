@@ -13,6 +13,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -104,6 +105,26 @@ public class EditBookingsTable {
             Logger.getLogger(EditPetsTable.class.getName()).log(Level.SEVERE, null, ex);
         }
         return -1;
+    }
+  
+    public ArrayList<Booking> keeperAvailable(String id) throws SQLException, ClassNotFoundException {
+        Connection con = DB_Connection.getConnection();
+        Statement stmt = con.createStatement();
+        ArrayList<Booking> book = new ArrayList<Booking>();
+        ResultSet rs;
+        try {
+            rs = stmt.executeQuery("SELECT * FROM bookings WHERE keeper_id= '" + id + "'");
+            while (rs.next()) {
+                String json = DB_Connection.getResultsToJSON(rs);
+                Gson gson = new Gson();
+                book.add(gson.fromJson(json, Booking.class));
+            }
+            return book;
+        } catch (Exception e) {
+            System.out.println("Got an exception! ");
+            System.out.println(e.getMessage());
+        }
+        return null;
     }
 
     /**
