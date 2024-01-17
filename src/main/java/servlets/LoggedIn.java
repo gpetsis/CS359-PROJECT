@@ -5,6 +5,7 @@
  */
 package servlets;
 
+import database.EditBookingsTable;
 import database.EditPetKeepersTable;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -17,6 +18,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import mainClasses.Booking;
 import mainClasses.PetKeeper;
 
 /**
@@ -68,6 +70,8 @@ public class LoggedIn extends HttpServlet {
 //        System.setOut(fileOut);
         String getType = request.getHeader("Type");
         ArrayList<PetKeeper> keepers;
+        String keeper_id;
+        boolean temp;
         try {
             EditPetKeepersTable epk = new EditPetKeepersTable();
             if (getType.equals("dog")) {
@@ -77,15 +81,28 @@ public class LoggedIn extends HttpServlet {
             }
             ArrayList<String> users = new ArrayList<String>();
             for (int i = 0; i < keepers.size(); i++) {
+                temp = false;
                 PetKeeper keeper = keepers.get(i);
-                String keeperJSON = epk.petKeeperToJSON(keeper);
-                users.add(keeperJSON);
+                keeper_id = keeper.getKeeperId();
+                EditBookingsTable ebt = new EditBookingsTable();
+                ArrayList<Booking> allBooking = ebt.keeperAvailable(keeper_id);
+                for (int j = 0; j < allBooking.size(); j++) {
+                    Booking item = allBooking.get(j);
+                    System.out.println(item);
+                    if (!item.getStatus().equals("finished")) {
+                        temp = true;
+                    }
+                }
+                if (temp == false) {
+                    String keeperJSON = epk.petKeeperToJSON(keeper);
+                    users.add(keeperJSON);
+                }
             }
             response.getWriter().write(users.toString());
             System.out.println(users.toString());
         } catch (SQLException | ClassNotFoundException ex) {
-            Logger.getLogger(Admin.class.getName()).log(Level.SEVERE, null, ex);
             System.out.println("error: " + ex);
+            Logger.getLogger(Admin.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
