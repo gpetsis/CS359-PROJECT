@@ -100,8 +100,8 @@ public class Register extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        PrintStream fileOut = new PrintStream(new File("C:\\Users\\Nikos Lasithiotakis\\Desktop\\CSD\\5ο Εξάμηνο\\ΗΥ359\\CS359-PROJECT\\src\\main\\java\\database\\logfile.txt"));
-        System.setOut(fileOut);
+//        PrintStream fileOut = new PrintStream(new File("C:\\Users\\Nikos Lasithiotakis\\Desktop\\CSD\\5ο Εξάμηνο\\ΗΥ359\\CS359-PROJECT\\src\\main\\java\\database\\logfile.txt"));
+//        System.setOut(fileOut);
         String getUserType = request.getHeader("User");
         System.out.println(getUserType);
         HttpSession session = request.getSession();
