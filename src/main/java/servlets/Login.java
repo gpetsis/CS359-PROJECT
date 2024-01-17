@@ -7,6 +7,7 @@ package servlets;
 
 import database.EditPetKeepersTable;
 import database.EditPetOwnersTable;
+import database.EditPetsTable;
 import java.io.BufferedReader;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -47,18 +48,65 @@ public class Login extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        HttpSession session=request.getSession();
-        if(session.getAttribute("loggedIn")!=null){
-            response.setStatus(200);
-//           Person p=Resources.registeredUsers.get(session.getAttribute("loggedIn").toString());
-//           response.getWriter().write(p.getUsername());
-        }
-        else{
-            response.setStatus(403);
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+//        PrintStream fileOut = new PrintStream(new File("C:\\CSD\\PENDING\\HY-359\\PROJECT\\CS359-PROJECT\\src\\main\\webapp\\logfile.txt"));
+//        System.setOut(fileOut);
+        String header = request.getHeader("Request-Type");
+        if (header.equals("Number-Of-Cats")) {
+            handleNumberOfCats(request, response);
+        } else if (header.equals("Number-Of-Dogs")) {
+            handleNumberOfDogs(request, response);
+        } else if (header.equals("Number-Of-Owners")) {
+            handleNumberOfOwners(request, response);
+        } else if (header.equals("Number-Of-Keepers")) {
+            handleNumberOfKeepers(request, response);
+        } else if (header.equals("Total-Earnings")) {
+            handleTotalEarnings(request, response);
+        } else {
+            HttpSession session = request.getSession();
+            if (session.getAttribute("loggedIn") != null) {
+                response.setStatus(200);
+            } else {
+                response.setStatus(403);
+            }
         }
     }
+
+    public void handleTotalEarnings(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+//        EditBookingsTable ebt = new EditBookingsTable();
+//        int numberOfCats = ebt.numberOfCats();
+//        response.getWriter().write(String.valueOf(numberOfCats));
+//        System.out.println(numberOfCats);
+    }
+
+    public void handleNumberOfOwners(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+//        EditPetsTable ept = new EditPetsTable();
+//        int numberOfCats = ept.numberOfCats();
+//        response.getWriter().write(String.valueOf(numberOfCats));
+//        System.out.println(numberOfCats);
+    }
+
+    public void handleNumberOfKeepers(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+//        EditPetsTable ept = new EditPetsTable();
+//        int numberOfCats = ept.numberOfCats();
+//        response.getWriter().write(String.valueOf(numberOfCats));
+//        System.out.println(numberOfCats);
+    }
+
+    public void handleNumberOfCats(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        EditPetsTable ept = new EditPetsTable();
+        int numberOfCats = ept.numberOfCats();
+        response.getWriter().write(String.valueOf(numberOfCats));
+        System.out.println(numberOfCats);
+    }
+
+    public void handleNumberOfDogs(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        EditPetsTable ept = new EditPetsTable();
+        int numberOfDogs = ept.numberOfDogs();
+        response.getWriter().write(String.valueOf(numberOfDogs));
+        System.out.println(numberOfDogs);
+    }
+
 
     /**
      * Handles the HTTP <code>POST</code> method.
