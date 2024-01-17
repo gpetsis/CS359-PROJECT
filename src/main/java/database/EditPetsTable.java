@@ -145,6 +145,7 @@ public class EditPetsTable {
         Connection con = DB_Connection.getConnection();
         Statement stmt = con.createStatement();
         Pet pet = new Pet();
+        pet = null;
         ResultSet rs;
         try {
             rs = stmt.executeQuery("SELECT * FROM pets WHERE owner_id= '" + id + "'");
