@@ -82,6 +82,11 @@
         <br>
         <button id="showAvailableKeepers" onclick="checkPet()">Show Available Keepers</button>
         <br><br>
+        <label id="fromDateLabel" style="display: none">From Date</label>
+        <input type="date" value="2024-01-25" id="fromDate" onchange="updateCost()" style="display: none">
+        <label id="toDateLabel" style="display: none">To Date</label>
+        <input type="date" value="2024-01-25" id="toDate" onchange="updateCost()" style="display: none">
+        <br>
         <div id="ajaxContent3"></div>
         <br>
         <button id="logout" onclick="logout()">Logout</button>
