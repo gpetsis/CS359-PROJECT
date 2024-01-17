@@ -19,6 +19,7 @@ $(document).ready(function() {
 
         console.log("Called init");
         xhr.open('GET', 'Admin');
+        xhr.setRequestHeader("Type", "-");
         xhr.setRequestHeader("Content-type", "application/json");
         xhr.send();
         loadStatistics();
