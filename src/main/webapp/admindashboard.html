@@ -15,12 +15,16 @@ and open the template in the editor.
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script> 
         <script src="https://www.gstatic.com/charts/loader.js"></script> 
         <script src="js/admin.js"></script>
+        <link href="css/style.css" rel="stylesheet" type="text/css"/>
     </head>
     <body>
         <h1>Welcome back, admin</h1>
         <div id="ajaxContent"></div>
         <h1>Statistics</h1>
-       
-        <div id="chart" style="width: 900px; height: 500px;"></div>
+        <div id="chartsDiv">
+            <div id="chartPets" style="width: 900px; height: 500px;"></div>
+            <div id="chartUsers" style="width: 900px; height: 500px;"></div>
+            <div id="chartEarnings" style="width: 900px; height: 500px;"></div>
+        </div>
     </body>
 </html>
