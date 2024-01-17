@@ -181,7 +181,6 @@ function handlePost() {
 }
 
 function checkPet(){
-    console.log(owner_id);
     var xhr = new XMLHttpRequest();
     xhr.onload = function () {
         if (xhr.readyState === 4 && xhr.status === 200) {
@@ -217,9 +216,9 @@ function showAvailableKeepers(type){
 }
 
 function createTableFromJSONKeepers(data) {
-    var html = "<table id='myTable'><tr><th>Username</th><th>Name</th></tr>";
+    var html = "<table id='myTable'><tr><th>Username</th><th>Email</th></tr>";
     for(var i = 0; i < data.length; i++) {
-        html += "<tr><td>" + data[i]["email"] + "</td><td>" + data[i]["firstname"] + "</td>";
+        html += "<tr><td>" + data[i]["username"] + "</td><td>" + data[i]["email"] + "</td>";
     }
     html += "</table>";
     return html;
