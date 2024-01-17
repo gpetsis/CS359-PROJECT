@@ -77,7 +77,11 @@ public class PetServlet extends HttpServlet {
         if (check == null) {
             response.setStatus(500);
         } else {
-            response.getWriter().write(check.getType());
+            if (request.getHeader("Return").equals("Type")) {
+                response.getWriter().write(check.getType());
+            } else {
+                response.getWriter().write(String.valueOf(check.getPet_id()));
+            }
         }
     }
 
