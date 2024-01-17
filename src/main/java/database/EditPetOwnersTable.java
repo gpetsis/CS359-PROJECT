@@ -10,6 +10,7 @@ import mainClasses.PetOwner;
 import database.DB_Connection;
 import java.io.FileNotFoundException;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -55,7 +56,23 @@ public class EditPetOwnersTable {
         String update="UPDATE petowners SET personalpage='"+personalpage+"' WHERE username = '"+username+"'";
         stmt.executeUpdate(update);
     }
-   
+
+    public int numberOfOwners() {
+        try {
+            Connection con;
+            con = DB_Connection.getConnection();
+            String sql = "SELECT COUNT(*) AS count FROM petowners";
+            PreparedStatement preparedStatement = con.prepareStatement(sql);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                return resultSet.getInt("count");
+            }
+        } catch (SQLException | ClassNotFoundException ex) {
+            Logger.getLogger(EditPetsTable.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return -1;
+    }
+
     public ArrayList<PetOwner> getOwners() throws SQLException, ClassNotFoundException {
         Connection con = DB_Connection.getConnection();
         Statement stmt = con.createStatement();
