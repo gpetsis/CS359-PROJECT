@@ -9,6 +9,7 @@ import com.google.gson.Gson;
 import mainClasses.Booking;
 import database.DB_Connection;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -87,6 +88,22 @@ public class EditBookingsTable {
         stmt.close();
         con.close();
 
+    }
+
+    public int totalEarnings() {
+        try {
+            Connection con;
+            con = DB_Connection.getConnection();
+            String sql = "SELECT SUM(price) AS earnings FROM bookings WHERE status='finished'";
+            PreparedStatement preparedStatement = con.prepareStatement(sql);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                return resultSet.getInt("earnings");
+            }
+        } catch (SQLException | ClassNotFoundException ex) {
+            Logger.getLogger(EditPetsTable.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return -1;
     }
 
     /**

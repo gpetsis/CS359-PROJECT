@@ -1,5 +1,9 @@
 var numberOfCats;
 var numberOfDogs;
+var numberOfOwners;
+var numberOfKeepers;
+var totalEarnings;
+var chartType;
 
 $(document).ready(function() {
     if(window.location.href == 'http://localhost:8080/Ask2/admindashboard.html') {
@@ -25,14 +29,17 @@ $(document).ready(function() {
     }
 })
 
-function getNumberOfPets(type) {
+function getNumberOf(type) {
     var xhr = new XMLHttpRequest();
-    var number;
     xhr.onload = function () {
         if (xhr.readyState === 4 && xhr.status === 200) {
             var response = xhr.responseText;
             console.log(response);
-            if(type == "Dogs") {
+            if(type == "Owners") {
+                numberOfOwners = parseInt(response);
+            } else if(type == "Keepers") {
+                numberOfKeepers = parseInt(response);
+            } else if(type == "Dogs") {
                 numberOfDogs = parseInt(response);
             } else {
                 numberOfCats = parseInt(response);
@@ -48,43 +55,107 @@ function getNumberOfPets(type) {
     xhr.send();
 }
 
+function getTotalEarnings() {
+    var xhr = new XMLHttpRequest();
+    xhr.onload = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            var response = xhr.responseText;
+            console.log(response);
+            totalEarnings = response;
+        } else if (xhr.status !== 200) {
+            return;
+        }
+    };
+
+    xhr.open('GET', 'Login');
+    xhr.setRequestHeader("Content-type", "application/json");
+    xhr.setRequestHeader("Request-Type", "Total-Earnings");
+    xhr.send();
+}
+
 function loadStatistics() {
     google.charts.load('current', {'packages':['corechart']});
 
     google.charts.setOnLoadCallback(initialize);
     
-    getNumberOfPets("Cats");
-    getNumberOfPets("Dogs");
-
-//    initialize();
-
+    getNumberOf("Cats");
+    getNumberOf("Dogs");
+    getNumberOf("Owners");
+    getNumberOf("Keepers");
+    getTotalEarnings();
 }
 
-function drawChart() {
-    console.log(numberOfCats, numberOfDogs);
+function drawChartPets() {
+    console.log("Cats and Dogs" + numberOfCats, numberOfDogs);
 
     var data = new google.visualization.DataTable();
-    data.addColumn('string', 'Pet');
+    data.addColumn('string', "Pets");
     data.addColumn('number', '# of pets');
     data.addRows([
-        ['Cats', numberOfCats],
-        ['Dogs', numberOfDogs]
+        ["Cats", numberOfCats],
+        ["Dogs", numberOfDogs],
     ]);
 
     var options = {
         title: 'Total number of pets',
         backgroundColor: {
             fill: 'darkslategrey'
-        }
+        },
     };
 
-    var chart = new google.visualization.BarChart(document.getElementById('chart'));
+    var chart = new google.visualization.BarChart(document.getElementById('chartPets'));
+    chart.draw(data, options);
+}
+
+function drawChartUsers() {
+    console.log("Keepers and Owners" + numberOfKeepers, numberOfOwners);
+
+    var data = new google.visualization.DataTable();
+    data.addColumn('string', "Users");
+    data.addColumn('number', '# of users');
+    data.addRows([
+        ["Keepers", numberOfKeepers],
+        ["Owners", numberOfOwners],
+    ]);
+
+    var options = {
+        title: 'Total number of users',
+        backgroundColor: {
+            fill: 'darkslategrey'
+        },
+    };
+
+    var chart = new google.visualization.BarChart(document.getElementById('chartUsers'));
+    chart.draw(data, options);
+}
+
+function drawChartEarnings() {
+    console.log("Earnings" + totalEarnings);
+
+    var data = new google.visualization.DataTable();
+    data.addColumn('string', "Earnings");
+    data.addColumn('number', "Total earnings");
+    data.addRows([
+        ["App", (85/100) * totalEarnings],
+        ["Keeper", (15/100) * totalEarnings],
+    ]);
+
+    var options = {
+        title: 'Total income',
+        backgroundColor: {
+            fill: 'darkslategrey'
+        },
+    };
+
+    var chart = new google.visualization.PieChart(document.getElementById('chartEarnings'));
     chart.draw(data, options);
 }
 
 async function initialize() {
     await new Promise(r => setTimeout(r, 500));
-    drawChart();
+    drawChartPets();
+    drawChartUsers();
+    drawChartEarnings();
 }
 
 function handle_admin_login() {

@@ -5,6 +5,7 @@
  */
 package servlets;
 
+import database.EditBookingsTable;
 import database.EditPetKeepersTable;
 import database.EditPetOwnersTable;
 import database.EditPetsTable;
@@ -73,24 +74,24 @@ public class Login extends HttpServlet {
     }
 
     public void handleTotalEarnings(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-//        EditBookingsTable ebt = new EditBookingsTable();
-//        int numberOfCats = ebt.numberOfCats();
-//        response.getWriter().write(String.valueOf(numberOfCats));
-//        System.out.println(numberOfCats);
+        EditBookingsTable ebt = new EditBookingsTable();
+        int totalEarnings = ebt.totalEarnings();
+        response.getWriter().write(String.valueOf(totalEarnings));
+        System.out.println("Total earnings: " + totalEarnings);
     }
 
     public void handleNumberOfOwners(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-//        EditPetsTable ept = new EditPetsTable();
-//        int numberOfCats = ept.numberOfCats();
-//        response.getWriter().write(String.valueOf(numberOfCats));
-//        System.out.println(numberOfCats);
+        EditPetOwnersTable eot = new EditPetOwnersTable();
+        int numberOfOwners = eot.numberOfOwners();
+        response.getWriter().write(String.valueOf(numberOfOwners));
+        System.out.println("Owners: " + numberOfOwners);
     }
 
     public void handleNumberOfKeepers(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-//        EditPetsTable ept = new EditPetsTable();
-//        int numberOfCats = ept.numberOfCats();
-//        response.getWriter().write(String.valueOf(numberOfCats));
-//        System.out.println(numberOfCats);
+        EditPetKeepersTable ekt = new EditPetKeepersTable();
+        int numberOfCats = ekt.numberOfKeepers();
+        response.getWriter().write(String.valueOf(numberOfCats));
+        System.out.println(numberOfCats);
     }
 
     public void handleNumberOfCats(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
