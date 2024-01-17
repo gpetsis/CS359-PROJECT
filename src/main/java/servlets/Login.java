@@ -56,6 +56,12 @@ public class Login extends HttpServlet {
             handleNumberOfCats(request, response);
         } else if (header.equals("Number-Of-Dogs")) {
             handleNumberOfDogs(request, response);
+        } else if (header.equals("Number-Of-Owners")) {
+            handleNumberOfOwners(request, response);
+        } else if (header.equals("Number-Of-Keepers")) {
+            handleNumberOfKeepers(request, response);
+        } else if (header.equals("Total-Earnings")) {
+            handleTotalEarnings(request, response);
         } else {
             HttpSession session = request.getSession();
             if (session.getAttribute("loggedIn") != null) {
@@ -64,6 +70,27 @@ public class Login extends HttpServlet {
                 response.setStatus(403);
             }
         }
+    }
+
+    public void handleTotalEarnings(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+//        EditBookingsTable ebt = new EditBookingsTable();
+//        int numberOfCats = ebt.numberOfCats();
+//        response.getWriter().write(String.valueOf(numberOfCats));
+//        System.out.println(numberOfCats);
+    }
+
+    public void handleNumberOfOwners(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+//        EditPetsTable ept = new EditPetsTable();
+//        int numberOfCats = ept.numberOfCats();
+//        response.getWriter().write(String.valueOf(numberOfCats));
+//        System.out.println(numberOfCats);
+    }
+
+    public void handleNumberOfKeepers(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+//        EditPetsTable ept = new EditPetsTable();
+//        int numberOfCats = ept.numberOfCats();
+//        response.getWriter().write(String.valueOf(numberOfCats));
+//        System.out.println(numberOfCats);
     }
 
     public void handleNumberOfCats(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
