@@ -137,6 +137,12 @@ div {
     max-height: 30%;
 }
 
+#chartsDiv {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 #submit-button {
     margin-top: 5%;
 }

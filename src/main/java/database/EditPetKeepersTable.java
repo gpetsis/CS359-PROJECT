@@ -10,6 +10,7 @@ import mainClasses.PetKeeper;
 import database.DB_Connection;
 import java.io.FileNotFoundException;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -157,8 +158,23 @@ public class EditPetKeepersTable {
         return null;
     }
 
-    
-     public ArrayList<PetKeeper> getAvailableKeepers(String type) throws SQLException, ClassNotFoundException {
+    public int numberOfKeepers() {
+        try {
+            Connection con;
+            con = DB_Connection.getConnection();
+            String sql = "SELECT COUNT(*) AS count FROM petkeepers";
+            PreparedStatement preparedStatement = con.prepareStatement(sql);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                return resultSet.getInt("count");
+            }
+        } catch (SQLException | ClassNotFoundException ex) {
+            Logger.getLogger(EditPetsTable.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return -1;
+    }
+
+    public ArrayList<PetKeeper> getAvailableKeepers(String type) throws SQLException, ClassNotFoundException {
         Connection con = DB_Connection.getConnection();
         Statement stmt = con.createStatement();
         ArrayList<PetKeeper> keepers = new ArrayList<PetKeeper>();
