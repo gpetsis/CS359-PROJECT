@@ -6,7 +6,9 @@
 package servlets;
 
 import database.EditPetsTable;
+import java.io.File;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.logging.Level;
@@ -61,23 +63,34 @@ public class PetServlet extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-//        PrintStream fileOut = new PrintStream(new File("C:\\Users\\Nikos Lasithiotakis\\Desktop\\CSD\\5ο Εξάμηνο\\ΗΥ359\\CS359-PROJECT\\src\\main\\webapp\\logfile.txt"));
-//        System.setOut(fileOut);
-        String get_owner_id = String.valueOf(request.getHeader("owner_id"));
-        System.out.println(get_owner_id);
-        EditPetsTable ept = new EditPetsTable();
-        Pet check = null;
-        try {
-            check = ept.petOfOwner(get_owner_id);
-        } catch (SQLException | ClassNotFoundException ex) {
-            Logger.getLogger(PetServlet.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        if (check == null) {
-            response.setStatus(500);
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        PrintStream fileOut = new PrintStream(new File("C:\\CSD\\PENDING\\HY-359\\PROJECT\\CS359-PROJECT\\src\\main\\java\\database\\logfile.txt"));
+        System.setOut(fileOut);
+        String petId = request.getHeader("Pet-Id");
+        if (petId == null) {
+            String get_owner_id = String.valueOf(request.getHeader("owner_id"));
+            System.out.println(get_owner_id);
+            EditPetsTable ept = new EditPetsTable();
+            Pet check = null;
+            try {
+                check = ept.petOfOwner(get_owner_id);
+            } catch (SQLException | ClassNotFoundException ex) {
+                Logger.getLogger(PetServlet.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            if (check == null) {
+                response.setStatus(500);
+            } else {
+                response.getWriter().write(check.getType());
+            }
         } else {
-            response.getWriter().write(check.getType());
+            try {
+                EditPetsTable ept = new EditPetsTable();
+                Pet pet = ept.petWithId(petId);
+                String petJSON = ept.petToJSON(pet);
+                response.getWriter().write(petJSON);
+            } catch (SQLException | ClassNotFoundException ex) {
+                Logger.getLogger(PetServlet.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
 

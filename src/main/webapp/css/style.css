@@ -137,6 +137,12 @@ div {
     max-height: 30%;
 }
 
+th, td {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px; /* Adjust the padding value as needed */
+}
+
 #chartsDiv {
     display: flex;
     flex-direction: column;
@@ -153,6 +159,12 @@ table {
 }
 
 #myTable {
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    color: white;
+    font-size: x-large;
+}
+
+#myTable2 {
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
     color: white;
     font-size: x-large;
