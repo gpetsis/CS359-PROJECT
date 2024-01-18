@@ -65,19 +65,26 @@ public class BookingServlet extends HttpServlet {
 //        PrintStream fileOut = new PrintStream(new File("C:\\Users\\Nikos Lasithiotakis\\Desktop\\CSD\\5ο Εξάμηνο\\ΗΥ359\\CS359-PROJECT\\src\\main\\webapp\\logfile.txt"));
 //        System.setOut(fileOut);
         String owner_id = request.getHeader("Type");
+        System.out.println(owner_id);
         ArrayList<Booking> books = new ArrayList<Booking>();
         EditBookingsTable ebt = new EditBookingsTable();
-        boolean temp = false;
+        boolean req = false;
+        boolean acc = false;
         try {
             books = ebt.ownerRequest(owner_id);
             for (int j = 0; j < books.size(); j++) {
                 Booking item = books.get(j);
                 System.out.println(item);
-                if (item.getStatus().equals("requested") || item.getStatus().equals("accepted")) {
-                    temp = true;
+                if (item.getStatus().equals("requested")) {
+                    req = true;
+                }
+                if (item.getStatus().equals("accepted")) {
+                    acc = true;
                 }
             }
-            if (temp == true) {
+            if (acc == true) {
+                response.setStatus(703);
+            } else if (req == true) {
                 response.setStatus(702);
             }
         } catch (SQLException | ClassNotFoundException ex) {
