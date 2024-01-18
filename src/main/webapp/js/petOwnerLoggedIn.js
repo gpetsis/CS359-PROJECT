@@ -311,7 +311,7 @@ function ownerRequest(keeper_id, price){
         }
     };
     xhr.open('GET', 'BookingServlet');
-    xhr.setRequestHeader("Type", owner_id);
+    xhr.setRequestHeader("Request-Type", owner_id);
     xhr.setRequestHeader("Content-type", "application/json");
     xhr.send();
 }
@@ -332,6 +332,13 @@ function updateCost(){
     }
 }
 
+function createTableFromJSONBooking(data) {
+    var html = "<table id='myTable'><tr><th>From Date</th><th>To Date</th><th>Price</th></tr>";
+    html += "<tr><td>" + data["fromdate"] + "</td><td>" + data["todate"] + "</td><td>" + data["price"] + "</td></tr>";
+    html += "</table>";
+    return html;
+}
+
 async function doRequests(){
     findUserData();
     await new Promise(r => setTimeout(r, 1000));
@@ -344,13 +351,14 @@ async function doRequests(){
             var finished = document.getElementById('finished');
             labelFinished.style.display = 'block';
             finished.style.display = 'block';
+            $("#ajaxContent6").html(createTableFromJSONBooking(xhr.responseText));
         } else if (xhr.status !== 200) {
             console.log("No Accepted Request");
             return;
         }
     };
     xhr.open('GET', 'BookingServlet');
-    xhr.setRequestHeader("Type", owner_id);
+    xhr.setRequestHeader("Request-Type", owner_id);
     xhr.setRequestHeader("Content-type", "application/json");
     xhr.send();
 }
@@ -361,12 +369,15 @@ function finished(){
     var xhr = new XMLHttpRequest();
     xhr.onload = function () {
         if (xhr.readyState === 4 && xhr.status === 200) {
+            $("#ajaxContent5").html("Your booking is finished.");
         } else if (xhr.status !== 200) {
+            $("#ajaxContent5").html("Something went wrong.");
             return;
         }
     };
     xhr.open('PUT', 'BookingServlet');
-    xhr.setRequestHeader("Type", owner_id);
+    xhr.setRequestHeader("owner_id", owner_id);
+    xhr.setRequestHeader("Request-Type", "Finished-Request");
     xhr.setRequestHeader("Content-type", "application/json");
     xhr.send();
 }
