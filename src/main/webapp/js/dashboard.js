@@ -15,7 +15,9 @@ async function loadData() {
     }
     await new Promise(r => setTimeout(r, 2000));
     loadCurrentKeeping();
-    showRequests();
+    if(keeperBookings.length != 0) {
+        showRequests();
+    }
 }
 
 function loadCurrentKeeping() {

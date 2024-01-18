@@ -19,7 +19,7 @@ function findUserData(){
 var owner_id;
 
 function createTableFromJSON(data) {
-    var html = "<table id='newTable'>";
+    var html = "<table id='myTable'>";
     for (const category in data) {
         var value = data[category];
         if(category == "owner_id"){
@@ -28,7 +28,7 @@ function createTableFromJSON(data) {
         if (category == "username" || category == "email" || category == "owner_id") {
             html += "<tr><td>" + category + "</td><td>" + value + "</td></tr>";
         } else {
-            html += "<tr><td class='label-row'>" + category + "</td><td><input type='text' value='" + value + "' data-category='" + category + "'></td></tr>";
+            html += "<tr><td class='label-row'>" + category + "</td><td><input class='table-inputs' type='text' value='" + value + "' data-category='" + category + "'></td></tr>";
         }
     }
     html += "</table>";
