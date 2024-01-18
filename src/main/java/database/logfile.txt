@@ -4,3 +4,43 @@ PetOwner
 tsitsip123
 tsitsip123
 PetOwner
+PetOwner
+undefined
+2
+mainClasses.Booking@3f7b8196
+mainClasses.Booking@21e05784
+mainClasses.Booking@18114bfe
+[{"keeper_id":3,"username":"yannis","email":"john@gmail.com","password":"ab$111111","firstname":"Yannis","lastname":"Nikolaidis","birthdate":"1983-03-03","gender":"Male","job":"Delivery","country":"Greece","city":"Heraklion","address":"Naxou 10","lat":35.3405493,"lon":25.1460471,"telephone":"6948000805","personalpage":"www.john.gr","property":"Both","propertydescription":"Monokatoikia kai auli","catkeeper":"true","dogkeeper":"true","catprice":8,"dogprice":12}, {"keeper_id":6,"username":"dogFriend","email":"dogfriend@gmail.com","password":"ab$111111","firstname":"Katerina","lastname":"Nikolaou","birthdate":"2001-03-03","gender":"Female","job":"Doctor","country":"Greece","city":"Heraklion","address":"Leof. Kalokerinou 16","lat":35.3387807,"lon":25.1264856,"telephone":"6975559992","personalpage":"www.nikolaou.gr","property":"Both","propertydescription":"Kentriko diamerisma stin Kalokerinou","catkeeper":"false","dogkeeper":"true","catprice":0,"dogprice":10}]
+PetOwner
+2
+mainClasses.Booking@e2b2455
+2
+mainClasses.Booking@3de94026
+mainClasses.Booking@58544b23
+mainClasses.Booking@5c1a77de
+[{"keeper_id":3,"username":"yannis","email":"john@gmail.com","password":"ab$111111","firstname":"Yannis","lastname":"Nikolaidis","birthdate":"1983-03-03","gender":"Male","job":"Delivery","country":"Greece","city":"Heraklion","address":"Naxou 10","lat":35.3405493,"lon":25.1460471,"telephone":"6948000805","personalpage":"www.john.gr","property":"Both","propertydescription":"Monokatoikia kai auli","catkeeper":"true","dogkeeper":"true","catprice":8,"dogprice":12}, {"keeper_id":6,"username":"dogFriend","email":"dogfriend@gmail.com","password":"ab$111111","firstname":"Katerina","lastname":"Nikolaou","birthdate":"2001-03-03","gender":"Female","job":"Doctor","country":"Greece","city":"Heraklion","address":"Leof. Kalokerinou 16","lat":35.3387807,"lon":25.1264856,"telephone":"6975559992","personalpage":"www.nikolaou.gr","property":"Both","propertydescription":"Kentriko diamerisma stin Kalokerinou","catkeeper":"false","dogkeeper":"true","catprice":0,"dogprice":10}]
+2
+mainClasses.Booking@cc15b97
+PetOwner
+2
+mainClasses.Booking@730e407d
+2
+mainClasses.Booking@71f18e15
+mainClasses.Booking@68a03c97
+mainClasses.Booking@12958e59
+[{"keeper_id":3,"username":"yannis","email":"john@gmail.com","password":"ab$111111","firstname":"Yannis","lastname":"Nikolaidis","birthdate":"1983-03-03","gender":"Male","job":"Delivery","country":"Greece","city":"Heraklion","address":"Naxou 10","lat":35.3405493,"lon":25.1460471,"telephone":"6948000805","personalpage":"www.john.gr","property":"Both","propertydescription":"Monokatoikia kai auli","catkeeper":"true","dogkeeper":"true","catprice":8,"dogprice":12}, {"keeper_id":6,"username":"dogFriend","email":"dogfriend@gmail.com","password":"ab$111111","firstname":"Katerina","lastname":"Nikolaou","birthdate":"2001-03-03","gender":"Female","job":"Doctor","country":"Greece","city":"Heraklion","address":"Leof. Kalokerinou 16","lat":35.3387807,"lon":25.1264856,"telephone":"6975559992","personalpage":"www.nikolaou.gr","property":"Both","propertydescription":"Kentriko diamerisma stin Kalokerinou","catkeeper":"false","dogkeeper":"true","catprice":0,"dogprice":10}]
+2
+mainClasses.Booking@4d838456
+2
+{"owner_id":2,"pet_id":"1234556677","keeper_id":3,"fromdate":"2024-01-25","todate":"2024-01-25","status":"requested","price":12}
+# The booking was successfully added in the database.
+PetKeeper
+null
+-
+yannisab$111111
+yannisab$111111
+-
+{"booking_id":4,"owner_id":2,"pet_id":1234556677,"keeper_id":3,"fromdate":"2024-01-25","todate":"2024-01-25","status":"requested","price":12}
+{"booking_id":0,"owner_id":0,"pet_id":0,"keeper_id":0,"price":0}
+-
+{"booking_id":0,"owner_id":0,"pet_id":0,"keeper_id":0,"price":0}
