@@ -152,10 +152,6 @@ function logout(){
     xhr.send();
 }
 
-document.addEventListener("DOMContentLoaded", function() {
-    findUserData();
-});
-
 function handlePost() {
     let myForm = document.getElementById('petsForm');
     let formData = new FormData(myForm);
@@ -308,7 +304,7 @@ function ownerRequest(keeper_id, price){
     xhr.onload = function () {
         if (xhr.readyState === 4 && xhr.status === 200) {
             book(keeper_id, price);
-        } else if (xhr.status === 702){
+        } else if (xhr.status === 702 || xhr.status === 703){
             $("#ajaxContent4").html("You have already made a booking request.");
         } else if (xhr.status !== 200) {
             return;
@@ -334,4 +330,43 @@ function updateCost(){
     for(let i = 0 ; i < costs.length ; i++){
         costs[i].innerHTML = costs_per_day[i].textContent * dayDifference;
     }
+}
+
+async function doRequests(){
+    findUserData();
+    await new Promise(r => setTimeout(r, 1000));
+    var xhr = new XMLHttpRequest();
+    xhr.onload = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            console.log("No Accepted Request");
+        } else if (xhr.status === 703){
+            var labelFinished = document.getElementById('labelFinished');
+            var finished = document.getElementById('finished');
+            labelFinished.style.display = 'block';
+            finished.style.display = 'block';
+        } else if (xhr.status !== 200) {
+            console.log("No Accepted Request");
+            return;
+        }
+    };
+    xhr.open('GET', 'BookingServlet');
+    xhr.setRequestHeader("Type", owner_id);
+    xhr.setRequestHeader("Content-type", "application/json");
+    xhr.send();
+}
+
+$(document).ready(doRequests())
+
+function finished(){
+    var xhr = new XMLHttpRequest();
+    xhr.onload = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+        } else if (xhr.status !== 200) {
+            return;
+        }
+    };
+    xhr.open('PUT', 'BookingServlet');
+    xhr.setRequestHeader("Type", owner_id);
+    xhr.setRequestHeader("Content-type", "application/json");
+    xhr.send();
 }

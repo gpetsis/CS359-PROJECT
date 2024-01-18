@@ -69,6 +69,15 @@ public class EditBookingsTable {
         con.close();
     }
 
+    public void setStatusFinished(int owner_id) throws SQLException, ClassNotFoundException {
+        Connection con = DB_Connection.getConnection();
+        Statement stmt = con.createStatement();
+        String updateQuery = "UPDATE bookings SET status='finished' WHERE owner_id= '" + owner_id + "' AND status='accepted'";
+        stmt.executeUpdate(updateQuery);
+        stmt.close();
+        con.close();
+    }
+
     public void createBookingTable() throws SQLException, ClassNotFoundException {
         Connection con = DB_Connection.getConnection();
         Statement stmt = con.createStatement();
