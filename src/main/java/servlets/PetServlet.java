@@ -6,9 +6,7 @@
 package servlets;
 
 import database.EditPetsTable;
-import java.io.File;
 import java.io.IOException;
-import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.logging.Level;
@@ -80,11 +78,11 @@ public class PetServlet extends HttpServlet {
             if (check == null) {
                 response.setStatus(500);
             } else {
-              if (request.getHeader("Return").equals("Type")) {
-                  response.getWriter().write(check.getType());
-              } else {
-                  response.getWriter().write(String.valueOf(check.getPet_id()));
-              }
+                if (request.getHeader("Return").equals("Type")) {
+                    response.getWriter().write(check.getType());
+                } else {
+                    response.getWriter().write(String.valueOf(check.getPet_id()));
+                }
             }
         } else {
             try {

@@ -1,0 +1,1 @@
+{"booking_id":1,"owner_id":1,"pet_id":1234554321,"keeper_id":1,"fromdate":"2023-08-10","todate":"2023-08-17","status":"accepted","price":63}

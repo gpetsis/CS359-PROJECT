@@ -6,19 +6,60 @@ $(document).ready(loadData());
 
 
 async function loadData() {
-    loadKeeperData();
+    await loadKeeperData();
     await new Promise(r => setTimeout(r, 2000));
-    loadKeeperRequests();
+    await loadKeeperRequests();
     await new Promise(r => setTimeout(r, 2000));
     for(var i = 0; i < keeperBookings.length; i++) {
-        loadPetInfo(i); // With keeperBookings;
+        await loadPetInfo(i); // With keeperBookings;
     }
     await new Promise(r => setTimeout(r, 2000));
-    var html = "<table id='myTable2'><tr><th>From</th><th>To</th><th>Cost</th><th>Name</th><th>Breed</th><th>Type</th><th>Accept</th><th>Decline</th></tr>";
+    loadCurrentKeeping();
+    showRequests();
+}
+
+function loadCurrentKeeping() {
+    var xhr = new XMLHttpRequest();
+
+    xhr.onload = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            var response = JSON.parse(xhr.responseText);
+            $('#ajaxMessagesDiv').html(response);
+            if(response['keeper_id'] != 0) {
+                showCurrentKeeping(response);
+            }
+            
+            console.log("Loaded currentKeeping");
+        } else if (xhr.status !== 200) {
+            $("#ajaxMessagesDiv").html("<h3>Error accepting request!</h3>");
+        }
+    };
+
+    xhr.open('GET', 'BookingServlet');
+    xhr.setRequestHeader("Content-type", "application/json");
+    xhr.setRequestHeader("Keeper-Id", keeperId);
+    xhr.setRequestHeader("Request-Type", "Get-Keeping");
+    xhr.send();
+}
+
+function showCurrentKeeping(keeping) {
+    console.log(keeping);
+    var html = "<h1>Your Current Keeping</h1>"
+    html += "<table id='myTable3'><tr><th>From</th><th>To</th><th>Cost</th></tr>";
+    html += "<tr><td>" + keeping["fromdate"] + "</td><td>" + keeping["todate"] + "</td><td>" + keeping["price"] + "</td></tr>";
+    html += "</table>";
+
+    $("#ajaxContentCurrentKeeping").append(html);
+}
+
+function showRequests() {
+    var html = "<h1>Your Keeping Requests</h4>"
+    html += "<table id='myTable2'><tr><th>From</th><th>To</th><th>Cost</th><th>Name</th><th>Breed</th><th>Type</th><th>Accept</th><th>Decline</th></tr>";
     for(var i = 0; i < keeperBookings.length; i++) {
         console.log(petInfo[i]);
         html += "<tr><td>" + keeperBookings[i]["fromdate"] + "</td><td>" + keeperBookings[i]["todate"] + "</td><td>" + keeperBookings[i]["price"] + "</td><td>" 
-                + petInfo[i]["name"] + "</td><td>" + petInfo[i]["breed"] + "</td><td>" + petInfo[i]["type"] + "</td><td><input onclick='acceptRequest(" + keeperBookings[i]["booking_id"] + ")' type='button' value='✓'</td><td><input type=button value='✖'</td></tr>";
+                + petInfo[i]["name"] + "</td><td>" + petInfo[i]["breed"] + "</td><td>" + petInfo[i]["type"] + "</td><td><input onclick='acceptRequest(" + keeperBookings[i]["booking_id"] + ")' type='button' value='✓'</td>\n\
+                <td><input onclick='declineRequest(" + keeperBookings[i]["booking_id"] + ")' type='button' value='✖'</td></tr>";
     }
     html += "</table>";
 
@@ -31,7 +72,7 @@ function acceptRequest(bookingId) {
 
     xhr.onload = function () {
         if (xhr.readyState === 4 && xhr.status === 200) {
-            $('#ajaxContent').html("<h4>Accepted request succesfully</h4>");
+            $('#ajaxMessagesDiv').html("<h4>Accepted request succesfully</h4>");
         } else if (xhr.status !== 200) {
             $("#ajaxMessagesDiv").html("<h3>Error accepting request!</h3>");
         }
@@ -50,7 +91,7 @@ function declineRequest(bookingId) {
 
     xhr.onload = function () {
         if (xhr.readyState === 4 && xhr.status === 200) {
-            $('#ajaxContent').html("<h4>Declined request succesfully</h4>");
+            $('#ajaxMessagesDiv').html("<h4>Declined request succesfully</h4>");
         } else if (xhr.status !== 200) {
             $("#ajaxMessagesDiv").html("<h3>Error declining request!</h3>");
         }
