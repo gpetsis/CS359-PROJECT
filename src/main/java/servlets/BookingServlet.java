@@ -5,12 +5,13 @@
  */
 package servlets;
 
-import database.EditPetsTable;
+import database.EditBookingsTable;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
@@ -18,14 +19,10 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import mainClasses.Pet;
+import mainClasses.Booking;
 
-/**
- *
- * @author Nikos Lasithiotakis
- */
-@WebServlet(name = "Pet", urlPatterns = {"/Pet"})
-public class PetServlet extends HttpServlet {
+@WebServlet(name = "BookingServlet", urlPatterns = {"/BookingServlet"})
+public class BookingServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -44,10 +41,10 @@ public class PetServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet Pet</title>");
+            out.println("<title>Servlet BookingServlet</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet Pet at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet BookingServlet at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -63,39 +60,30 @@ public class PetServlet extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // PrintStream fileOut = new PrintStream(new File("C:\\CSD\\PENDING\\HY-359\\PROJECT\\CS359-PROJECT\\src\\main\\java\\database\\logfile.txt"));
-        // System.setOut(fileOut);
-        String petId = request.getHeader("Pet-Id");
-        if (petId == null) {
-            String get_owner_id = String.valueOf(request.getHeader("owner_id"));
-            System.out.println(get_owner_id);
-            EditPetsTable ept = new EditPetsTable();
-            Pet check = null;
-            try {
-                check = ept.petOfOwner(get_owner_id);
-            } catch (SQLException | ClassNotFoundException ex) {
-                Logger.getLogger(PetServlet.class.getName()).log(Level.SEVERE, null, ex);
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        PrintStream fileOut = new PrintStream(new File("C:\\Users\\Nikos Lasithiotakis\\Desktop\\CSD\\5ο Εξάμηνο\\ΗΥ359\\CS359-PROJECT\\src\\main\\webapp\\logfile.txt"));
+        System.setOut(fileOut);
+        String owner_id = request.getHeader("Type");
+        ArrayList<Booking> books = new ArrayList<Booking>();
+        EditBookingsTable ebt = new EditBookingsTable();
+        boolean temp = false;
+        try {
+            books = ebt.ownerRequest(owner_id);
+            for (int j = 0; j < books.size(); j++) {
+                Booking item = books.get(j);
+                System.out.println(item);
+                if (item.getStatus().equals("requested")) {
+                    temp = true;
+                }
             }
-            if (check == null) {
-                response.setStatus(500);
-            } else {
-              if (request.getHeader("Return").equals("Type")) {
-                  response.getWriter().write(check.getType());
-              } else {
-                  response.getWriter().write(String.valueOf(check.getPet_id()));
-              }
+            if (temp == true) {
+                response.setStatus(702);
             }
-        } else {
-            try {
-                EditPetsTable ept = new EditPetsTable();
-                Pet pet = ept.petWithId(petId);
-                String petJSON = ept.petToJSON(pet);
-                response.getWriter().write(petJSON);
-            } catch (SQLException | ClassNotFoundException ex) {
-                Logger.getLogger(PetServlet.class.getName()).log(Level.SEVERE, null, ex);
-            }
+        } catch (SQLException | ClassNotFoundException ex) {
+            Logger.getLogger(BookingServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
+
     }
 
     /**

@@ -180,11 +180,22 @@ function handlePost() {
     return false;
 }
 
+var petType;
+
 function checkPet(){
     var xhr = new XMLHttpRequest();
     xhr.onload = function () {
         if (xhr.readyState === 4 && xhr.status === 200) {
+            petType = xhr.responseText;
             console.log(xhr.responseText);
+            var fromDate = document.getElementById('fromDate');
+            var toDate = document.getElementById('toDate');
+            var fromDateLabel = document.getElementById('fromDateLabel');
+            var toDateLabel = document.getElementById('toDateLabel');
+            fromDate.style.display = 'block';
+            toDate.style.display = 'block';
+            fromDateLabel.style.display = 'block';
+            toDateLabel.style.display = 'block';
             showAvailableKeepers(xhr.responseText);
         } else if (xhr.status !== 200) {
             $("#ajaxContent3").html("You don't have a pet");
@@ -194,6 +205,8 @@ function checkPet(){
     console.log("Called Pet");
     xhr.open('GET', 'Pet');
     xhr.setRequestHeader("owner_id", owner_id);
+    xhr.setRequestHeader("Return", "Type");
+
     xhr.setRequestHeader("Content-type", "application/json");
     xhr.send();
 }
@@ -215,11 +228,89 @@ function showAvailableKeepers(type){
     xhr.send();
 }
 
+var pet_id;
+
+function get_pet_id(){
+    var xhr = new XMLHttpRequest();
+    xhr.onload = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            pet_id = xhr.responseText;
+            console.log(xhr.responseText);
+        } else if (xhr.status !== 200) {
+            return;
+        }
+    };
+    xhr.open('GET', 'Pet');
+    xhr.setRequestHeader("owner_id", owner_id);
+    xhr.setRequestHeader("Return", "pet_id");
+    xhr.setRequestHeader("Content-type", "application/json");
+    xhr.send();
+}
+
 function createTableFromJSONKeepers(data) {
-    var html = "<table id='myTable'><tr><th>Username</th><th>Email</th></tr>";
+    var html = "<table id='myTable'><tr><th>Username</th><th>Email</th><th>Cost (per Day)</th><th>Total Cost</th><th>Book</th></tr>";
     for(var i = 0; i < data.length; i++) {
-        html += "<tr><td>" + data[i]["username"] + "</td><td>" + data[i]["email"] + "</td>";
+        if(petType == "dog"){
+            html += "<tr><td>" + data[i]["username"] + "</td><td>" + data[i]["email"] + "</td>\n\
+            <td><p class='cost_per_day'>" + data[i]["dogprice"] + "</p></td><td><p class='cost'>" + data[i]["dogprice"] + "</p></td><td><input type='button' \n\
+            onclick='ownerRequest(" + data[i]["keeper_id"] + "," + data[i]["dogprice"] + ")' value='book'></td></tr>";
+        }
+        else{
+            html += "<tr><td>" + data[i]["username"] + "</td><td>" + data[i]["email"] + "</td>\n\
+            <td><p class='cost_per_day'>" + data[i]["catprice"] + "</p></td><td><p class='cost'>" + data[i]["dogprice"] + "</p></td><td><input type='button' \n\
+            onclick='ownerRequest(" + data[i]["keeper_id"] + "," + data[i]["catprice"] + ")' value='book'></td></tr>";
+        }
     }
     html += "</table>";
     return html;
+}
+
+function book(keeper_id, price){
+    get_pet_id();
+    console.log(petType);
+    console.log(owner_id);
+    console.log(keeper_id, price);
+    var fromDateValue = document.getElementById('fromDate').value;
+    var toDateValue = document.getElementById('toDate').value;
+    var fromDate = new Date(fromDateValue);
+    var toDate = new Date(toDateValue);
+    var timeDifference = toDate.getTime() - fromDate.getTime();
+    var dayDifference = timeDifference / (1000 * 60 * 60 * 24);
+    dayDifference++;
+    console.log("Day Difference: " + dayDifference);
+    var cost = dayDifference * price;
+    console.log(cost);
+}
+
+function ownerRequest(keeper_id, price){
+    var xhr = new XMLHttpRequest();
+    xhr.onload = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            book(keeper_id, price);
+        } else if (xhr.status === 702){
+            
+        } else if (xhr.status !== 200) {
+            return;
+        }
+    };
+    xhr.open('GET', 'BookingServlet');
+    xhr.setRequestHeader("Type", owner_id);
+    xhr.setRequestHeader("Content-type", "application/json");
+    xhr.send();
+}
+
+function updateCost(){
+    var fromDateValue = document.getElementById('fromDate').value;
+    var toDateValue = document.getElementById('toDate').value;
+    var fromDate = new Date(fromDateValue);
+    var toDate = new Date(toDateValue);
+    var timeDifference = toDate.getTime() - fromDate.getTime();
+    var dayDifference = timeDifference / (1000 * 60 * 60 * 24);
+    dayDifference++;
+    console.log("Day Difference: " + dayDifference);
+    var costs_per_day = document.getElementsByClassName("cost_per_day");
+    var costs = document.getElementsByClassName("cost");
+    for(let i = 0 ; i < costs.length ; i++){
+        costs[i].innerHTML = costs_per_day[i].textContent * dayDifference;
+    }
 }
