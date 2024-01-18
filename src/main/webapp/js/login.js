@@ -36,6 +36,7 @@ function handle_login() {
     };
     xhr.open('POST', 'Login');
     xhr.setRequestHeader("Content-type", "application/json");
+    xhr.setRequestHeader("User", "-");
    
     console.log(JSON.stringify(jsonData));
     xhr.send(JSON.stringify(jsonData));

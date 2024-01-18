@@ -43,6 +43,10 @@
         <servlet-name>Admin</servlet-name>
         <servlet-class>servlets.Admin</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>Keeper</servlet-name>
+        <servlet-class>servlets.Keeper</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Register</servlet-name>
         <url-pattern>/Register</url-pattern>
@@ -87,6 +91,10 @@
     <servlet-mapping>
         <servlet-name>PetServlet</servlet-name>
         <url-pattern>/PetServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Keeper</servlet-name>
+        <url-pattern>/Keeper</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>BookingServlet</servlet-name>
