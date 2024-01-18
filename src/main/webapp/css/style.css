@@ -158,13 +158,13 @@ table {
     color: white;
 }
 
-#myTable, myTable2, myTable2 {
+#myTable, #myTable2, #myTable3 {
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
     color: white;
     font-size: x-large;
 }
 
-#ajaxContent, ajaxContentRequests {
+#ajaxContent, #ajaxContentRequests, #ajaxContentCurrentKeeping {
     display: flex;
     flex-direction: column;
     align-items: center;
