@@ -1,2 +1,4 @@
-org.apache.catalina.connector.CoyoteInputStream@a782e29
-2
+{"owner_id":2,"pet_id":"1234556677","keeper_id":1,"fromdate":"2024-01-25","todate":"2024-01-25","status":"requested","price":11}
+# The booking was successfully added in the database.
+mainClasses.Booking@2f2534fe
+mainClasses.Booking@3101a718
