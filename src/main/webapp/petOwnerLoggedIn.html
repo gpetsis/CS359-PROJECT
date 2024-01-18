@@ -7,7 +7,7 @@
         <script src="js/petOwnerLoggedIn.js"></script>
         <link rel="stylesheet" type ="text/css" href ="css/style.css">
     </head>
-    <body>
+    <body style="text-align: center;">
         <div id="ajaxContent"></div>
         <div id="newAjaxContent"></div>
         <button id="edit" onclick="getDataFromTable()">Edit</button>
@@ -81,21 +81,28 @@
         </form>
         <br>
         <label id="labelFinished" style="display: none">Your Current Booking : </label>
+        <br>
         <div id="ajaxContent6"></div>
-        <button id="finished" onclick="finished()" style="display: none">Finished</button>
+        <br>
+        <div id="finishedButton" style="display: none">
+            <label>Click this button to finish the stay.</label>
+            <button id="finished" onclick="finished()">Finished</button>
+        </div>
         <div id="ajaxContent5"></div>
         <br><br>
         <button id="showAvailableKeepers" onclick="checkPet()">Show Available Keepers</button>
         <br><br>
-        <label id="fromDateLabel" style="display: none">From Date</label>
-        <input type="date" value="2024-01-25" id="fromDate" onchange="updateCost()" style="display: none">
-        <label id="toDateLabel" style="display: none">To Date</label>
-        <input type="date" value="2024-01-25" id="toDate" onchange="updateCost()" style="display: none">
+        <div id="dates">
+            <label id="fromDateLabel" style="display: none">From Date</label>
+            <input type="date" value="2024-01-25" id="fromDate" onchange="updateCost()" style="display: none">
+            <br>
+            <label id="toDateLabel" style="display: none">To Date</label>
+            <input type="date" value="2024-01-25" id="toDate" onchange="updateCost()" style="display: none">
+        </div>
         <br>
         <div id="ajaxContent3"></div>
         <br>
         <div id="ajaxContent4"></div>
-        <br>
         <button id="logout" onclick="logout()">Logout</button>
         <br><br>
     </body>
