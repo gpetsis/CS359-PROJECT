@@ -54,8 +54,20 @@ public class BookingServlet extends HttpServlet {
         String requestType = request.getHeader("Request-Type");
         if (requestType.equals("Accept-Request")) {
             handleAcceptRequest(request, response);
-        } else {
+        } else if (requestType.equals("Decline-Request")) {
             handleDeclineRequest(request, response);
+        } else if (requestType.equals("Finished-Request")) {
+            handleFinishRequest(request, response);
+        }
+    }
+
+    protected void handleFinishRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        EditBookingsTable ebt = new EditBookingsTable();
+        String owner_id = request.getHeader("owner_id");
+        try {
+            ebt.setStatusFinished(owner_id);
+        } catch (SQLException | ClassNotFoundException ex) {
+            Logger.getLogger(BookingServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -109,12 +121,13 @@ public class BookingServlet extends HttpServlet {
                 Logger.getLogger(BookingServlet.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else {
-            String owner_id = request.getHeader("Type");
+            String owner_id = request.getHeader("Request-Type");
             System.out.println(owner_id);
             ArrayList<Booking> books = new ArrayList<Booking>();
             EditBookingsTable ebt = new EditBookingsTable();
             boolean req = false;
             boolean acc = false;
+            Booking curBooking = new Booking();
             try {
                 books = ebt.ownerRequest(owner_id);
                 for (int j = 0; j < books.size(); j++) {
@@ -124,10 +137,12 @@ public class BookingServlet extends HttpServlet {
                         req = true;
                     }
                     if (item.getStatus().equals("accepted")) {
+                        curBooking = books.get(j);
                         acc = true;
                     }
                 }
                 if (acc == true) {
+                    response.getWriter().write(ebt.bookingToJSON(curBooking));
                     response.setStatus(703);
                 } else if (req == true) {
                     response.setStatus(702);

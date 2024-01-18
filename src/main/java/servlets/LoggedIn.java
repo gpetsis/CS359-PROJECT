@@ -89,7 +89,7 @@ public class LoggedIn extends HttpServlet {
                 for (int j = 0; j < allBooking.size(); j++) {
                     Booking item = allBooking.get(j);
                     System.out.println(item);
-                    if (!item.getStatus().equals("finished")) {
+                    if (!item.getStatus().equals("finished") || !item.getStatus().equals("declined")) {
                         temp = true;
                     }
                 }
