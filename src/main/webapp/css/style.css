@@ -170,7 +170,7 @@ table {
     font-size: x-large;
 }
 
-#ajaxContent {
+#ajaxContent, ajaxContentRequests {
     display: flex;
     flex-direction: column;
     align-items: center;
