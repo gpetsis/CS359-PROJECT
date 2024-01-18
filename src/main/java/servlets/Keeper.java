@@ -1,9 +1,7 @@
 package servlets;
 
 import database.EditBookingsTable;
-import java.io.File;
 import java.io.IOException;
-import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -36,8 +34,8 @@ public class Keeper extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
-            PrintStream fileOut = new PrintStream(new File("C:\\CSD\\PENDING\\HY-359\\PROJECT\\CS359-PROJECT\\src\\main\\java\\database\\logfile.txt"));
-            System.setOut(fileOut);
+//            PrintStream fileOut = new PrintStream(new File("C:\\CSD\\PENDING\\HY-359\\PROJECT\\CS359-PROJECT\\src\\main\\java\\database\\logfile.txt"));
+//            System.setOut(fileOut);
             String keeperId = request.getHeader("Keeper-Id");
             EditBookingsTable ebt = new EditBookingsTable();
             ArrayList<Booking> bookings = ebt.getKeeperRequests(keeperId);
