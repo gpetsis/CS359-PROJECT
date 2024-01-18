@@ -348,10 +348,10 @@ async function doRequests(){
             console.log("No Accepted Request");
         } else if (xhr.status === 703){
             var labelFinished = document.getElementById('labelFinished');
-            var finished = document.getElementById('finished');
+            var finished = document.getElementById('finishedButton');
             labelFinished.style.display = 'block';
             finished.style.display = 'block';
-            $("#ajaxContent6").html(createTableFromJSONBooking(xhr.responseText));
+            $("#ajaxContent6").html(createTableFromJSONBooking(JSON.parse(xhr.responseText)));
         } else if (xhr.status !== 200) {
             console.log("No Accepted Request");
             return;
