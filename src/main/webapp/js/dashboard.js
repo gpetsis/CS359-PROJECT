@@ -14,35 +14,73 @@ async function loadData() {
         loadPetInfo(i); // With keeperBookings;
     }
     await new Promise(r => setTimeout(r, 2000));
-    var html = "<table id='myTable2'><tr><th>From</th><th>To</th><th>Cost</th><th>Name</th><th>Breed</th><th>Type</th></tr>";
+    var html = "<table id='myTable2'><tr><th>From</th><th>To</th><th>Cost</th><th>Name</th><th>Breed</th><th>Type</th><th>Accept</th><th>Decline</th></tr>";
     for(var i = 0; i < keeperBookings.length; i++) {
         console.log(petInfo[i]);
         html += "<tr><td>" + keeperBookings[i]["fromdate"] + "</td><td>" + keeperBookings[i]["todate"] + "</td><td>" + keeperBookings[i]["price"] + "</td><td>" 
-                + petInfo[i]["name"] + "</td><td>" + petInfo[i]["breed"] + "</td><td>" + petInfo[i]["type"] + "</td></tr>";
+                + petInfo[i]["name"] + "</td><td>" + petInfo[i]["breed"] + "</td><td>" + petInfo[i]["type"] + "</td><td><input onclick='acceptRequest(" + keeperBookings[i]["booking_id"] + ")' type='button' value='✓'</td><td><input type=button value='✖'</td></tr>";
     }
     html += "</table>";
 
-    $("#ajaxContent").append(html);
+    $("#ajaxContentRequests").append(html);
+}
+
+function acceptRequest(bookingId) {
+    console.log("Booking Id" + bookingId);
+    var xhr = new XMLHttpRequest();
+
+    xhr.onload = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            $('#ajaxContent').html("<h4>Accepted request succesfully</h4>");
+        } else if (xhr.status !== 200) {
+            $("#ajaxMessagesDiv").html("<h3>Error accepting request!</h3>");
+        }
+    };
+
+    xhr.open('PUT', 'BookingServlet');
+    xhr.setRequestHeader("Content-type", "application/json");
+    xhr.setRequestHeader("Booking-Id", bookingId);
+    xhr.setRequestHeader("Request-Type", "Accept-Request");
+    xhr.send();
+}
+
+function declineRequest(bookingId) {
+    console.log("Booking Id" + bookingId);
+    var xhr = new XMLHttpRequest();
+
+    xhr.onload = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            $('#ajaxContent').html("<h4>Declined request succesfully</h4>");
+        } else if (xhr.status !== 200) {
+            $("#ajaxMessagesDiv").html("<h3>Error declining request!</h3>");
+        }
+    };
+
+    xhr.open('PUT', 'BookingServlet');
+    xhr.setRequestHeader("Content-type", "application/json");
+    xhr.setRequestHeader("Booking-Id", bookingId);
+    xhr.setRequestHeader("Request-Type", "Decline-Request");
+    xhr.send();
 }
 
 function loadPetInfo(i) {
-        var xhr = new XMLHttpRequest();
-        
-        xhr.onload = function () {
-            if (xhr.readyState === 4 && xhr.status === 200) {
-                const responseData = JSON.parse(xhr.responseText);
-                petInfo.push(responseData);
-//                $('#ajaxContent').append(createTableFromJSONKeeperData(responseData));
-                console.log(responseData);
-            } else if (xhr.status !== 200) {
-                alert('Request failed. Returned status of ' + xhr.status);
-            }
-        };
+    var xhr = new XMLHttpRequest();
 
-        xhr.open('GET', 'PetServlet');
-        xhr.setRequestHeader("Content-type", "application/json");
-        xhr.setRequestHeader("Pet-Id", keeperBookings[i]["pet_id"]);
-        xhr.send();
+    xhr.onload = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            const responseData = JSON.parse(xhr.responseText);
+            petInfo.push(responseData);
+//                $('#ajaxContent').append(createTableFromJSONKeeperData(responseData));
+            console.log(responseData);
+        } else if (xhr.status !== 200) {
+            alert('Request failed. Returned status of ' + xhr.status);
+        }
+    };
+
+    xhr.open('GET', 'PetServlet');
+    xhr.setRequestHeader("Content-type", "application/json");
+    xhr.setRequestHeader("Pet-Id", keeperBookings[i]["pet_id"]);
+    xhr.send();
 }
 
 function loadKeeperData() {
@@ -70,7 +108,6 @@ function loadKeeperRequests() {
         if (xhr.readyState === 4 && xhr.status === 200) {
             const responseData = JSON.parse(xhr.responseText);
             keeperBookings = responseData;
-//            $('#ajaxContent').append(createTableFromJSONKeeperRequests(responseData));
             console.log(responseData);
         } else if (xhr.status !== 200) {
             alert('Request failed. Returned status of ' + xhr.status);
