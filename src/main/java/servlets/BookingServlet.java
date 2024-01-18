@@ -50,6 +50,37 @@ public class BookingServlet extends HttpServlet {
         }
     }
 
+    protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String requestType = request.getHeader("Request-Type");
+        if (requestType.equals("Accept-Request")) {
+            handleAcceptRequest(request, response);
+        } else {
+            handleDeclineRequest(request, response);
+        }
+    }
+
+    protected void handleAcceptRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        try {
+            EditBookingsTable ebt = new EditBookingsTable();
+            String bookingId = request.getHeader("Booking-Id");
+            ebt.updateBooking(Integer.valueOf(bookingId), "accepted");
+        } catch (SQLException | ClassNotFoundException ex) {
+            response.setStatus(409);
+            Logger.getLogger(BookingServlet.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    protected void handleDeclineRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        try {
+            EditBookingsTable ebt = new EditBookingsTable();
+            String bookingId = request.getHeader("Booking-Id");
+            ebt.updateBooking(Integer.valueOf(bookingId), "declined");
+        } catch (SQLException | ClassNotFoundException ex) {
+            response.setStatus(409);
+            Logger.getLogger(BookingServlet.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
@@ -62,35 +93,49 @@ public class BookingServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-//        PrintStream fileOut = new PrintStream(new File("C:\\Users\\Nikos Lasithiotakis\\Desktop\\CSD\\5ο Εξάμηνο\\ΗΥ359\\CS359-PROJECT\\src\\main\\webapp\\logfile.txt"));
-//        System.setOut(fileOut);
-        String owner_id = request.getHeader("Type");
-        System.out.println(owner_id);
-        ArrayList<Booking> books = new ArrayList<Booking>();
-        EditBookingsTable ebt = new EditBookingsTable();
-        boolean req = false;
-        boolean acc = false;
-        try {
-            books = ebt.ownerRequest(owner_id);
-            for (int j = 0; j < books.size(); j++) {
-                Booking item = books.get(j);
-                System.out.println(item);
-                if (item.getStatus().equals("requested")) {
-                    req = true;
-                }
-                if (item.getStatus().equals("accepted")) {
-                    acc = true;
-                }
+//         PrintStream fileOut = new PrintStream(new File("C:\\CSD\\PENDING\\HY-359\\PROJECT\\CS359-PROJECT\\src\\main\\java\\database\\logfile.txt"));
+//         System.setOut(fileOut);
+        String header = request.getHeader("Request-Type");
+        if (header.equals("Get-Keeping")) {
+            try {
+                String keeper_id = request.getHeader("Keeper-Id");
+                EditBookingsTable ebt = new EditBookingsTable();
+                Booking booking = ebt.getKeeperCurrentKeeping(keeper_id);
+                response.getWriter().write(ebt.bookingToJSON(booking));
+                System.out.println(ebt.bookingToJSON(booking));
+            } catch (SQLException | ClassNotFoundException ex) {
+                response.setStatus(409);
+                System.out.println("Error: " + ex);
+                Logger.getLogger(BookingServlet.class.getName()).log(Level.SEVERE, null, ex);
             }
-            if (acc == true) {
-                response.setStatus(703);
-            } else if (req == true) {
-                response.setStatus(702);
+        } else {
+            String owner_id = request.getHeader("Type");
+            System.out.println(owner_id);
+            ArrayList<Booking> books = new ArrayList<Booking>();
+            EditBookingsTable ebt = new EditBookingsTable();
+            boolean req = false;
+            boolean acc = false;
+            try {
+                books = ebt.ownerRequest(owner_id);
+                for (int j = 0; j < books.size(); j++) {
+                    Booking item = books.get(j);
+                    System.out.println(item);
+                    if (item.getStatus().equals("requested")) {
+                        req = true;
+                    }
+                    if (item.getStatus().equals("accepted")) {
+                        acc = true;
+                    }
+                }
+                if (acc == true) {
+                    response.setStatus(703);
+                } else if (req == true) {
+                    response.setStatus(702);
+                }
+            } catch (SQLException | ClassNotFoundException ex) {
+                Logger.getLogger(BookingServlet.class.getName()).log(Level.SEVERE, null, ex);
             }
-        } catch (SQLException | ClassNotFoundException ex) {
-            Logger.getLogger(BookingServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
-
     }
 
     /**
