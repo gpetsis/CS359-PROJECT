@@ -80,6 +80,9 @@
             
         </form>
         <br>
+        <label id="labelFinished" style="display: none">Your Current Booking : </label>
+        <button id="finished" onclick="finished()" style="display: none">Finished</button>
+        <br><br>
         <button id="showAvailableKeepers" onclick="checkPet()">Show Available Keepers</button>
         <br><br>
         <label id="fromDateLabel" style="display: none">From Date</label>
@@ -88,6 +91,8 @@
         <input type="date" value="2024-01-25" id="toDate" onchange="updateCost()" style="display: none">
         <br>
         <div id="ajaxContent3"></div>
+        <br>
+        <div id="ajaxContent4"></div>
         <br>
         <button id="logout" onclick="logout()">Logout</button>
         <br><br>

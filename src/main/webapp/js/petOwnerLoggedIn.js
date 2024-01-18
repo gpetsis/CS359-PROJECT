@@ -152,10 +152,6 @@ function logout(){
     xhr.send();
 }
 
-document.addEventListener("DOMContentLoaded", function() {
-    findUserData();
-});
-
 function handlePost() {
     let myForm = document.getElementById('petsForm');
     let formData = new FormData(myForm);
@@ -235,7 +231,6 @@ function get_pet_id(){
     xhr.onload = function () {
         if (xhr.readyState === 4 && xhr.status === 200) {
             pet_id = xhr.responseText;
-            console.log(xhr.responseText);
         } else if (xhr.status !== 200) {
             return;
         }
@@ -265,11 +260,9 @@ function createTableFromJSONKeepers(data) {
     return html;
 }
 
-function book(keeper_id, price){
+async function book(keeper_id, price){
     get_pet_id();
-    console.log(petType);
-    console.log(owner_id);
-    console.log(keeper_id, price);
+    await new Promise(r => setTimeout(r, 1000));
     var fromDateValue = document.getElementById('fromDate').value;
     var toDateValue = document.getElementById('toDate').value;
     var fromDate = new Date(fromDateValue);
@@ -277,9 +270,33 @@ function book(keeper_id, price){
     var timeDifference = toDate.getTime() - fromDate.getTime();
     var dayDifference = timeDifference / (1000 * 60 * 60 * 24);
     dayDifference++;
-    console.log("Day Difference: " + dayDifference);
     var cost = dayDifference * price;
-    console.log(cost);
+    var jsonData = {};
+    jsonData['owner_id'] = owner_id;
+    jsonData['pet_id'] = pet_id;
+    jsonData['keeper_id'] = keeper_id;
+    jsonData['fromdate'] = fromDateValue;
+    jsonData['todate'] = toDateValue;
+    jsonData['status'] = "requested";
+    jsonData['price'] = cost;
+    for (let key in jsonData) {
+        if (jsonData.hasOwnProperty(key)) {
+            console.log(key + ": " + jsonData[key]);
+        }
+    }
+    console.log(JSON.stringify(jsonData));
+    var xhr = new XMLHttpRequest();
+    xhr.onload = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            $("#ajaxContent4").html("Booking request completed.");
+        } else if (xhr.status !== 200) {
+            $("#ajaxContent4").html("Booking request failed.");
+            return;
+        }
+    };
+    xhr.open('POST', 'BookingServlet');
+    xhr.setRequestHeader("Content-type", "application/json");
+    xhr.send(JSON.stringify(jsonData));
 }
 
 function ownerRequest(keeper_id, price){
@@ -287,8 +304,8 @@ function ownerRequest(keeper_id, price){
     xhr.onload = function () {
         if (xhr.readyState === 4 && xhr.status === 200) {
             book(keeper_id, price);
-        } else if (xhr.status === 702){
-            
+        } else if (xhr.status === 702 || xhr.status === 703){
+            $("#ajaxContent4").html("You have already made a booking request.");
         } else if (xhr.status !== 200) {
             return;
         }
@@ -313,4 +330,43 @@ function updateCost(){
     for(let i = 0 ; i < costs.length ; i++){
         costs[i].innerHTML = costs_per_day[i].textContent * dayDifference;
     }
+}
+
+async function doRequests(){
+    findUserData();
+    await new Promise(r => setTimeout(r, 1000));
+    var xhr = new XMLHttpRequest();
+    xhr.onload = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            console.log("No Accepted Request");
+        } else if (xhr.status === 703){
+            var labelFinished = document.getElementById('labelFinished');
+            var finished = document.getElementById('finished');
+            labelFinished.style.display = 'block';
+            finished.style.display = 'block';
+        } else if (xhr.status !== 200) {
+            console.log("No Accepted Request");
+            return;
+        }
+    };
+    xhr.open('GET', 'BookingServlet');
+    xhr.setRequestHeader("Type", owner_id);
+    xhr.setRequestHeader("Content-type", "application/json");
+    xhr.send();
+}
+
+$(document).ready(doRequests())
+
+function finished(){
+    var xhr = new XMLHttpRequest();
+    xhr.onload = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+        } else if (xhr.status !== 200) {
+            return;
+        }
+    };
+    xhr.open('PUT', 'BookingServlet');
+    xhr.setRequestHeader("Type", owner_id);
+    xhr.setRequestHeader("Content-type", "application/json");
+    xhr.send();
 }

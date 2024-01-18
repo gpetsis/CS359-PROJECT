@@ -6,9 +6,9 @@
 package servlets;
 
 import database.EditBookingsTable;
-import java.io.File;
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.PrintStream;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -93,8 +93,8 @@ public class BookingServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        PrintStream fileOut = new PrintStream(new File("C:\\CSD\\PENDING\\HY-359\\PROJECT\\CS359-PROJECT\\src\\main\\java\\database\\logfile.txt"));
-        System.setOut(fileOut);
+//         PrintStream fileOut = new PrintStream(new File("C:\\CSD\\PENDING\\HY-359\\PROJECT\\CS359-PROJECT\\src\\main\\java\\database\\logfile.txt"));
+//         System.setOut(fileOut);
         String header = request.getHeader("Request-Type");
         if (header.equals("Get-Keeping")) {
             try {
@@ -110,19 +110,26 @@ public class BookingServlet extends HttpServlet {
             }
         } else {
             String owner_id = request.getHeader("Type");
+            System.out.println(owner_id);
             ArrayList<Booking> books = new ArrayList<Booking>();
             EditBookingsTable ebt = new EditBookingsTable();
-            boolean temp = false;
+            boolean req = false;
+            boolean acc = false;
             try {
                 books = ebt.ownerRequest(owner_id);
                 for (int j = 0; j < books.size(); j++) {
                     Booking item = books.get(j);
                     System.out.println(item);
                     if (item.getStatus().equals("requested")) {
-                        temp = true;
+                        req = true;
+                    }
+                    if (item.getStatus().equals("accepted")) {
+                        acc = true;
                     }
                 }
-                if (temp == true) {
+                if (acc == true) {
+                    response.setStatus(703);
+                } else if (req == true) {
                     response.setStatus(702);
                 }
             } catch (SQLException | ClassNotFoundException ex) {
@@ -142,7 +149,23 @@ public class BookingServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+//        PrintStream fileOut = new PrintStream(new File("C:\\Users\\Nikos Lasithiotakis\\Desktop\\CSD\\5ο Εξάμηνο\\ΗΥ359\\CS359-PROJECT\\src\\main\\webapp\\logfile.txt"));
+//        System.setOut(fileOut);
+        String requestString = "";
+        BufferedReader in = new BufferedReader(new InputStreamReader(request.getInputStream()));
+        String line = in.readLine();
+        while (line != null) {
+            requestString += line;
+            line = in.readLine();
+        }
+        System.out.println(requestString);
+        EditBookingsTable ebt = new EditBookingsTable();
+        try {
+            ebt.addBookingFromJSON(requestString);
+        } catch (ClassNotFoundException ex) {
+            response.setStatus(702);
+            Logger.getLogger(BookingServlet.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
