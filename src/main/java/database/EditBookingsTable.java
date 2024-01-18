@@ -146,8 +146,28 @@ public class EditBookingsTable {
         }
         return null;
     }
- 
-  public ArrayList<Booking> ownerRequest(String owner_id) throws SQLException, ClassNotFoundException {
+
+    public Booking getKeeperCurrentKeeping(String id) throws SQLException, ClassNotFoundException {
+        Connection con = DB_Connection.getConnection();
+        Statement stmt = con.createStatement();
+        Booking book = new Booking();
+        ResultSet rs;
+        try {
+            rs = stmt.executeQuery("SELECT * FROM bookings WHERE keeper_id= '" + id + "' AND status='accepted'");
+            while (rs.next()) {
+                String json = DB_Connection.getResultsToJSON(rs);
+                Gson gson = new Gson();
+                book = gson.fromJson(json, Booking.class);
+            }
+            return book;
+        } catch (Exception e) {
+            System.out.println("Got an exception! ");
+            System.out.println(e.getMessage());
+        }
+        return null;
+    }
+
+    public ArrayList<Booking> ownerRequest(String owner_id) throws SQLException, ClassNotFoundException {
         Connection con = DB_Connection.getConnection();
         Statement stmt = con.createStatement();
         ArrayList<Booking> book = new ArrayList<Booking>();
