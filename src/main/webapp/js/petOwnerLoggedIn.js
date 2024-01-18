@@ -253,12 +253,12 @@ function createTableFromJSONKeepers(data) {
         if(petType == "dog"){
             html += "<tr><td>" + data[i]["username"] + "</td><td>" + data[i]["email"] + "</td>\n\
             <td><p class='cost_per_day'>" + data[i]["dogprice"] + "</p></td><td><p class='cost'>" + data[i]["dogprice"] + "</p></td><td><input type='button' \n\
-            onclick='book(" + data[i]["keeper_id"] + "," + data[i]["dogprice"] + ")' value='book'></td></tr>";
+            onclick='ownerRequest(" + data[i]["keeper_id"] + "," + data[i]["dogprice"] + ")' value='book'></td></tr>";
         }
         else{
             html += "<tr><td>" + data[i]["username"] + "</td><td>" + data[i]["email"] + "</td>\n\
             <td><p class='cost_per_day'>" + data[i]["catprice"] + "</p></td><td><p class='cost'>" + data[i]["dogprice"] + "</p></td><td><input type='button' \n\
-            onclick='book(" + data[i]["keeper_id"] + "," + data[i]["catprice"] + ")' value='book'></td></tr>";
+            onclick='ownerRequest(" + data[i]["keeper_id"] + "," + data[i]["catprice"] + ")' value='book'></td></tr>";
         }
     }
     html += "</table>";
@@ -280,6 +280,23 @@ function book(keeper_id, price){
     console.log("Day Difference: " + dayDifference);
     var cost = dayDifference * price;
     console.log(cost);
+}
+
+function ownerRequest(keeper_id, price){
+    var xhr = new XMLHttpRequest();
+    xhr.onload = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            book(keeper_id, price);
+        } else if (xhr.status === 702){
+            
+        } else if (xhr.status !== 200) {
+            return;
+        }
+    };
+    xhr.open('GET', 'BookingServlet');
+    xhr.setRequestHeader("Type", owner_id);
+    xhr.setRequestHeader("Content-type", "application/json");
+    xhr.send();
 }
 
 function updateCost(){
