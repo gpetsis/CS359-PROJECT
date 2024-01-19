@@ -198,7 +198,6 @@ function checkPet(){
             return;
         }
     };
-    console.log("Called Pet");
     xhr.open('GET', 'Pet');
     xhr.setRequestHeader("owner_id", owner_id);
     xhr.setRequestHeader("Return", "Type");
@@ -339,9 +338,7 @@ function createTableFromJSONBooking(data) {
     return html;
 }
 
-async function doRequests(){
-    findUserData();
-    await new Promise(r => setTimeout(r, 1000));
+function activeBooking(){
     var xhr = new XMLHttpRequest();
     xhr.onload = function () {
         if (xhr.readyState === 4 && xhr.status === 200) {
@@ -363,6 +360,51 @@ async function doRequests(){
     xhr.send();
 }
 
+function getFinishedBooking(){
+    var xhr = new XMLHttpRequest();
+    xhr.onload = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            console.log("No Finished Booking");
+        } else if (xhr.status === 703){
+            var finishedBookings = document.getElementById('finishedBookings');
+            finishedBookings.style.display = 'block';
+            $("#ajaxContent6").html(createTableFromJSONBooking(JSON.parse(xhr.responseText)));
+        } else if (xhr.status !== 200) {
+            console.log("No Finished Booking");
+            return;
+        }
+    };
+    xhr.open('GET', 'BookingServlet');
+//    xhr.setRequestHeader("Request-Type", );
+    xhr.setRequestHeader("Content-type", "application/json");
+    xhr.send();
+}
+
+/*function createTableFromJSONFinishedBooking(data) {
+    var html = "<table id='myTable'><tr><th>Username</th><th>Email</th><th>Cost (per Day)</th><th>Total Cost</th><th>Book</th></tr>";
+    for(var i = 0; i < data.length; i++) {
+        if(petType == "dog"){
+            html += "<tr><td>" + data[i]["username"] + "</td><td>" + data[i]["email"] + "</td>\n\
+            <td><p class='cost_per_day'>" + data[i]["dogprice"] + "</p></td><td><p class='cost'>" + data[i]["dogprice"] + "</p></td><td><input type='button' \n\
+            onclick='ownerRequest(" + data[i]["keeper_id"] + "," + data[i]["dogprice"] + ")' value='book'></td></tr>";
+        }
+        else{
+            html += "<tr><td>" + data[i]["username"] + "</td><td>" + data[i]["email"] + "</td>\n\
+            <td><p class='cost_per_day'>" + data[i]["catprice"] + "</p></td><td><p class='cost'>" + data[i]["dogprice"] + "</p></td><td><input type='button' \n\
+            onclick='ownerRequest(" + data[i]["keeper_id"] + "," + data[i]["catprice"] + ")' value='book'></td></tr>";
+        }
+    }
+    html += "</table>";
+    return html;
+}*/
+
+async function doRequests(){
+    findUserData();
+    await new Promise(r => setTimeout(r, 1000));
+    activeBooking();
+    await new Promise(r => setTimeout(r, 1000));
+}
+
 $(document).ready(doRequests())
 
 function finished(){
@@ -380,4 +422,13 @@ function finished(){
     xhr.setRequestHeader("Request-Type", "Finished-Request");
     xhr.setRequestHeader("Content-type", "application/json");
     xhr.send();
+}
+
+function rateKeeper(rating) {
+    const stars = document.querySelectorAll('.star');
+    stars.forEach(star => star.classList.remove('selected'));
+    for (let i = 0; i < rating; i++) {
+        stars[i].classList.add('selected');
+    }
+    console.log('Rated:', rating);
 }
