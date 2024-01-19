@@ -33,6 +33,30 @@ and open the template in the editor.
         </div>
         <br>
         <div id="ajaxContentCurrentKeeping"></div>
+
+         
+        <div id="chatGPTdiv">
+            <h1>Ask ChatGPT</h1>
+            <div style="display: flex; flex-direction: row; align-items: center">
+                <h2>How to take care a&nbsp;</h2>
+                <input type="text" id="chatGPT1" style="height: fit-content">
+                <input type="button" onclick="handleChatGPT(1)" value="Ask">
+            </div>
+            <div style="display: flex; flex-direction: row; align-items: center">
+                <h2>Show me information about &nbsp;</h2>
+                <input type="text" id="chatGPT2">
+                <input type="button" onclick="handleChatGPT(2)" value="Ask">
+            </div>
+            <div style="display: flex; flex-direction: column; align-items: center; width: 100%">
+                <h2>Ask anything</h2>
+                <input type="text" id="chatGPT3" style="width: 25% fixed;">
+                <input type="button" onclick="handleChatGPT(3)" value="Ask">
+            </div>
+        </div>
+        <div id="chatGPTresponsediv" style="width: 100%; display: flex; justify-content: center; align-items: center; text-align: center">
+            <div id="ajaxchatGPTResponse" style="width: 60%">
+            </div>
+        </div>
         <div id="ajaxNumberOfKeepings">
             <h1>Your Statistics</h1>
         </div>
