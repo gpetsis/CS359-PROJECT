@@ -6,6 +6,7 @@
 package servlets;
 
 import database.EditBookingsTable;
+import database.EditPetKeepersTable;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -17,6 +18,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
@@ -110,7 +112,7 @@ public class BookingServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        PrintStream fileOut = new PrintStream(new File("C:\\CSD\\PENDING\\HY-359\\PROJECT\\CS359-PROJECT\\src\\main\\java\\database\\logfile.txt"));
+        PrintStream fileOut = new PrintStream(new File("C:\\Users\\Nikos Lasithiotakis\\Desktop\\CSD\\5ο Εξάμηνο\\ΗΥ359\\CS359-PROJECT\\src\\main\\webapp\\logfile.txt"));
         System.setOut(fileOut);
         String header = request.getHeader("Request-Type");
         if (header.equals("Get-Keeping")) {
@@ -147,6 +149,58 @@ public class BookingServlet extends HttpServlet {
             System.out.println(numberOfBookings);
             System.out.println(numberOfDays);
             response.getWriter().write("{\"numberOfDays\":\"" + numberOfDays + "\", \"numberOfBookings\":\"" + numberOfBookings + "\"}");
+        } else if (header.equals("FinishedBookings")) {
+            String owner_id = request.getHeader("owner_id");
+            System.out.println(owner_id);
+            ArrayList<Booking> books = new ArrayList<Booking>();
+            EditBookingsTable ebt = new EditBookingsTable();
+            boolean temp = false;
+            ArrayList<Booking> allFinishedBookings = new ArrayList<Booking>();
+            try {
+                books = ebt.ownerRequest(owner_id);
+                for (int j = 0; j < books.size(); j++) {
+                    Booking item = books.get(j);
+                    System.out.println(item);
+                    if (item.getStatus().equals("finished")) {
+                        temp = true;
+                        allFinishedBookings.add(books.get(j));
+                    }
+                }
+                if (temp == true) {
+                    ArrayList<String> bookingToString = new ArrayList<String>();
+                    String tempBooking;
+                    for (int k = 0; k < allFinishedBookings.size(); k++) {
+                        tempBooking = ebt.bookingToJSON(allFinishedBookings.get(k));
+                        bookingToString.add(tempBooking);
+                    }
+                    response.getWriter().write(bookingToString.toString());
+                    response.setStatus(703);
+                }
+            } catch (SQLException | ClassNotFoundException ex) {
+                Logger.getLogger(BookingServlet.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else if (header.equals("KeeperInfo")) {
+            String keeper_ids = request.getHeader("KeeperIds");
+            String[] keyValuePairs = keeper_ids.substring(1, keeper_ids.length() - 1).split(",");
+            List<String> valuesList = new ArrayList<>();
+            for (String pair : keyValuePairs) {
+                String[] keyValue = pair.split(":");
+                int value = Integer.parseInt(keyValue[1].trim());
+                String stringvalue = String.valueOf(value);
+                valuesList.add(stringvalue);
+            }
+            System.out.println(valuesList);
+            ArrayList<String> keepers = new ArrayList<String>();
+            EditPetKeepersTable ept = new EditPetKeepersTable();
+            for (int q = 0; q < valuesList.size(); q++) {
+                try {
+                    keepers.add(ept.getKeepersById(valuesList.get(q)));
+                } catch (SQLException | ClassNotFoundException ex) {
+                    response.setStatus(500);
+                    Logger.getLogger(BookingServlet.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            response.getWriter().write(keepers.toString());
         } else {
             String owner_id = request.getHeader("Request-Type");
             System.out.println(owner_id);
