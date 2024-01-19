@@ -15,9 +15,32 @@ async function loadData() {
     }
     await new Promise(r => setTimeout(r, 2000));
     loadCurrentKeeping();
+    await new Promise(r => setTimeout(r, 2000));
+    loadStatistics();
     if(keeperBookings.length != 0) {
         showRequests();
     }
+}
+
+function loadStatistics() {
+    var xhr = new XMLHttpRequest();
+
+    xhr.onload = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            var response = JSON.parse(xhr.responseText);
+            console.log(response);
+            $("#ajaxNumberOfKeepings").append("<h2>Number of total bookings: " + response["numberOfBookings"] + "</h2>");
+            $("#ajaxNumberOfKeepings").append("<h2>Number of total days booked: " + response["numberOfDays"] + "</h2>");
+        } else if (xhr.status !== 200) {
+            $("#ajaxMessagesDiv").html("<h3>Error accepting request!</h3>");
+        }
+    };
+
+    xhr.open('GET', 'BookingServlet');
+    xhr.setRequestHeader("Content-type", "application/json");
+    xhr.setRequestHeader("Keeper-Id", keeperId);
+    xhr.setRequestHeader("Request-Type", "Get-Statistics");
+    xhr.send();
 }
 
 function loadCurrentKeeping() {
@@ -30,8 +53,6 @@ function loadCurrentKeeping() {
             if(response['keeper_id'] != 0) {
                 showCurrentKeeping(response);
             }
-            
-            console.log("Loaded currentKeeping");
         } else if (xhr.status !== 200) {
             $("#ajaxMessagesDiv").html("<h3>Error accepting request!</h3>");
         }

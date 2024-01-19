@@ -7,10 +7,15 @@ package servlets;
 
 import database.EditBookingsTable;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -105,8 +110,8 @@ public class BookingServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-//         PrintStream fileOut = new PrintStream(new File("C:\\CSD\\PENDING\\HY-359\\PROJECT\\CS359-PROJECT\\src\\main\\java\\database\\logfile.txt"));
-//         System.setOut(fileOut);
+        PrintStream fileOut = new PrintStream(new File("C:\\CSD\\PENDING\\HY-359\\PROJECT\\CS359-PROJECT\\src\\main\\java\\database\\logfile.txt"));
+        System.setOut(fileOut);
         String header = request.getHeader("Request-Type");
         if (header.equals("Get-Keeping")) {
             try {
@@ -120,6 +125,28 @@ public class BookingServlet extends HttpServlet {
                 System.out.println("Error: " + ex);
                 Logger.getLogger(BookingServlet.class.getName()).log(Level.SEVERE, null, ex);
             }
+        } else if (header.equals("Get-Statistics")) {
+            String keeper_id = request.getHeader("Keeper-Id");
+            EditBookingsTable ebt = new EditBookingsTable();
+            ArrayList<Booking> bookings = ebt.getTotalBookingsFinished(keeper_id);
+            int numberOfBookings = bookings.size();
+            int numberOfDays = 0;
+
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+            Booking booking;
+            for (int i = 0; i < numberOfBookings; i++) {
+                booking = bookings.get(i);
+                LocalDate fromDate = LocalDate.parse(booking.getFromDate(), formatter);
+                LocalDate toDate = LocalDate.parse(booking.getToDate(), formatter);
+
+                long daysDifference = ChronoUnit.DAYS.between(fromDate, toDate);
+                numberOfDays += daysDifference;
+            }
+
+            System.out.println(numberOfBookings);
+            System.out.println(numberOfDays);
+            response.getWriter().write("{\"numberOfDays\":\"" + numberOfDays + "\", \"numberOfBookings\":\"" + numberOfBookings + "\"}");
         } else {
             String owner_id = request.getHeader("Request-Type");
             System.out.println(owner_id);
