@@ -253,6 +253,24 @@ public class EditPetKeepersTable {
         return null;
     }
 
+    public String getKeepersById(String id) throws SQLException, ClassNotFoundException {
+        Connection con = DB_Connection.getConnection();
+        Statement stmt = con.createStatement();
+
+        ResultSet rs;
+        try {
+            rs = stmt.executeQuery("SELECT * FROM petkeepers WHERE keeper_id = '" + id + "'");
+            rs.next();
+            String json = DB_Connection.getResultsToJSON(rs);
+            return json;
+        } catch (Exception e) {
+            System.err.println("Got an exception! ");
+            System.err.println(e.getMessage());
+        }
+        return null;
+    }
+
+
 
      public void createPetKeepersTable() throws SQLException, ClassNotFoundException {
 
