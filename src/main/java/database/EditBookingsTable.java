@@ -8,6 +8,9 @@ package database;
 import com.google.gson.Gson;
 import mainClasses.Booking;
 import database.DB_Connection;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -67,6 +70,29 @@ public class EditBookingsTable {
         stmt.executeUpdate(updateQuery);
         stmt.close();
         con.close();
+    }
+
+    public ArrayList<Booking> getTotalBookingsFinished(String keeper_id) throws FileNotFoundException {
+        PrintStream fileOut = new PrintStream(new File("C:\\CSD\\PENDING\\HY-359\\PROJECT\\CS359-PROJECT\\src\\main\\java\\database\\logfile.txt"));
+        System.setOut(fileOut);
+        try {
+            Connection con;
+            con = DB_Connection.getConnection();
+            String sql = "SELECT * FROM bookings WHERE keeper_id=" + keeper_id + " AND status='finished'";
+            ArrayList<Booking> bookings = new ArrayList<Booking>();
+            PreparedStatement preparedStatement = con.prepareStatement(sql);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                String json = DB_Connection.getResultsToJSON(resultSet);
+                Gson gson = new Gson();
+                bookings.add(gson.fromJson(json, Booking.class));
+            }
+            return bookings;
+        } catch (SQLException | ClassNotFoundException ex) {
+            System.out.println("Error: " + ex);
+            Logger.getLogger(EditPetsTable.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
     }
 
     public void setStatusFinished(String owner_id) throws SQLException, ClassNotFoundException {
