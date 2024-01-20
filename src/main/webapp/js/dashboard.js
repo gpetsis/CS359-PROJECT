@@ -43,6 +43,53 @@ function loadStatistics() {
     xhr.send();
 }
 
+function handleChatGPT(number) {
+    var question;
+    if(number == 1) {
+        var input = document.getElementById("chatGPT1").value;
+        question = "How to take care of a " + input;
+    } else if(number ==  2) {
+        var input = document.getElementById("chatGPT2").value;
+        question = "Show me information about " + input;
+    } else {
+        var input = document.getElementById("chatGPT3").value;
+        question = input;   
+    }
+
+    var key = "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";
+    const apiUrl = 'https://api.openai.com/v1/chat/completions';
+    const apiKey = key;
+    fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${apiKey}`
+        },
+        body: JSON.stringify({
+            "model": "gpt-3.5-turbo",
+            "messages": [{
+                "role": "system",
+                "content": "You are ChatGPT, a helpful assistant."
+            }, {
+                "role": "user",
+                "content": question
+            }]
+        })
+    }).then(response => {
+        if(!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+    }).then(data => {
+        console.log(data.choices[0].message.content);
+        $("#ajaxchatGPTResponse").html("<p>" + data.choices[0].message.content + "</p>")
+    }).catch(error => {
+        console.error('Error:', error);
+    });
+
+    console.log(question);
+}
+
 function loadCurrentKeeping() {
     var xhr = new XMLHttpRequest();
 
