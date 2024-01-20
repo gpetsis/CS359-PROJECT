@@ -140,7 +140,7 @@ div {
 th, td {
     border: 1px solid #dddddd;
     text-align: left;
-    padding: 8px; /* Adjust the padding value as needed */
+    padding: 8px;
 }
 
 #chartsDiv {
@@ -164,10 +164,11 @@ table {
     font-size: x-large;
 }
 
-#ajaxContent, #ajaxContentRequests, #ajaxContentCurrentKeeping, #ajaxContent2, #ajaxContent3, #ajaxContent4, #ajaxContent5, #ajaxContent6, #keepers, #ajaxContent7{
+#ajaxContent, #ajaxContentRequests, #ajaxContentCurrentKeeping, #ajaxContent2, #ajaxContent3, #ajaxContent4, #ajaxContent5, #ajaxContent6, #keepers, #ajaxContent7, #chatGPTdiv{
     display: flex;
     flex-direction: column;
     align-items: center;
+    text-align: center;
     width: 100%;
 }
 
