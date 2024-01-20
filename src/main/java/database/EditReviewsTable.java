@@ -116,4 +116,49 @@ public class EditReviewsTable {
             Logger.getLogger(EditPetsTable.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+
+    public void updateReviewText(Review r, String review_id) throws SQLException, ClassNotFoundException {
+        Connection con = DB_Connection.getConnection();
+        Statement stmt = con.createStatement();
+        String updateQuery = "UPDATE reviews SET reviewText='" + r.getReviewText() + "' WHERE review_id='" + review_id + "'";
+        System.out.println(updateQuery);
+        stmt.executeUpdate(updateQuery);
+        stmt.close();
+        con.close();
+    }
+
+    public void updateReviewScore(Review r, String review_id) throws SQLException, ClassNotFoundException {
+        Connection con = DB_Connection.getConnection();
+        Statement stmt = con.createStatement();
+        String updateQuery = "UPDATE reviews SET reviewScore='" + r.getReviewScore() + "' WHERE review_id='" + review_id + "'";
+        System.out.println(updateQuery);
+        stmt.executeUpdate(updateQuery);
+        stmt.close();
+        con.close();
+    }
+
+    public String getReviewId(Review r) throws SQLException, ClassNotFoundException {
+        Connection con = DB_Connection.getConnection();
+        Statement stmt = con.createStatement();
+
+        ResultSet rs;
+        try {
+            rs = stmt.executeQuery("SELECT review_id FROM reviews WHERE keeper_id= '" + r.getKeeper_id() + "' AND owner_id= '" + r.getOwner_id() + "'");
+            rs.next();
+            String json = DB_Connection.getResultsToJSON(rs);
+            int colonIndex = json.indexOf(':');
+            String valuePart = "";
+            if (colonIndex != -1) {
+                valuePart = json.substring(colonIndex + 1).trim();
+                valuePart = valuePart.replaceAll("^\"|\"$", "");
+                valuePart = valuePart.replaceAll("[^\\d]", "");
+                System.out.println(valuePart);
+            }
+            return valuePart;
+        } catch (Exception e) {
+            System.out.println("Got an exception! ");
+            System.out.println(e.getMessage());
+        }
+        return null;
+    }
 }

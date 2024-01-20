@@ -103,10 +103,16 @@
         <div id="ajaxContent3"></div>
         <br>
         <div id="ajaxContent4"></div>
-        <div id="finishedBookings">
-            <h2>Your Finished Booking</h2>
+        <div id="finishedBookings" style="display: none">
+            <h2>Your Finished Bookings</h2>
             <h3>Here you can review our keepers!</h3>
             <div id="ajaxContent7"></div>
+            <br>
+            <label><b>Write Your Review</b></label>
+            <br><br>
+            <textarea id="review" name="review" rows="4" cols="50"></textarea>
+            <br><br>
+            <label><b>Rate</b></label>
             <div id="rating" class="stars">
                 <span class="star" onclick="rateKeeper(1)">★</span>
                 <span class="star" onclick="rateKeeper(2)">★</span>
@@ -115,6 +121,8 @@
                 <span class="star" onclick="rateKeeper(5)">★</span>
             </div>
         </div>
+        <br>
+        <div id="ajaxContent8"></div>
         <br>
         <button id="logout" onclick="logout()">Logout</button>
         <br><br>

@@ -8,9 +8,7 @@ package database;
 import com.google.gson.Gson;
 import mainClasses.Booking;
 import database.DB_Connection;
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.PrintStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -73,8 +71,8 @@ public class EditBookingsTable {
     }
 
     public ArrayList<Booking> getTotalBookingsFinished(String keeper_id) throws FileNotFoundException {
-        PrintStream fileOut = new PrintStream(new File("C:\\CSD\\PENDING\\HY-359\\PROJECT\\CS359-PROJECT\\src\\main\\java\\database\\logfile.txt"));
-        System.setOut(fileOut);
+//        PrintStream fileOut = new PrintStream(new File("C:\\CSD\\PENDING\\HY-359\\PROJECT\\CS359-PROJECT\\src\\main\\java\\database\\logfile.txt"));
+//        System.setOut(fileOut);
         try {
             Connection con;
             con = DB_Connection.getConnection();
