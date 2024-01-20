@@ -433,21 +433,23 @@ function review(keeper_id){
         }
     }
     console.log(JSON.stringify(jsonData));
-    /*if(reviewValue == "" && ratingValue == 0){
-        console.log("Ola kena");
-    }*/
-    var xhr = new XMLHttpRequest();
-    xhr.onload = function () {
-        if (xhr.readyState === 4 && xhr.status === 200) {
-            $("#ajaxContent8").html("Review request completed.");
-        } else if (xhr.status !== 200) {
-            $("#ajaxContent8").html("Review request failed.");
-            return;
-        }
-    };
-    xhr.open('POST', 'ReviewServlet');
-    xhr.setRequestHeader("Content-type", "application/json");
-    xhr.send(JSON.stringify(jsonData));
+    if(reviewValue == "" || ratingValue == 0){
+        $("#ajaxContent8").html("Please provide both a review and a rating before submitting.");
+    }
+    else{
+        var xhr = new XMLHttpRequest();
+        xhr.onload = function () {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                $("#ajaxContent8").html("Review request completed.");
+            } else if (xhr.status !== 200) {
+                $("#ajaxContent8").html("Review request failed.");
+                return;
+            }
+        };
+        xhr.open('POST', 'ReviewServlet');
+        xhr.setRequestHeader("Content-type", "application/json");
+        xhr.send(JSON.stringify(jsonData));
+    }
 }
 
 function getSelectedRating() {

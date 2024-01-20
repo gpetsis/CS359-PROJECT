@@ -8,17 +8,17 @@ package servlets;
 import database.EditBookingsTable;
 import database.EditPetKeepersTable;
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
@@ -112,8 +112,8 @@ public class BookingServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        PrintStream fileOut = new PrintStream(new File("C:\\Users\\Nikos Lasithiotakis\\Desktop\\CSD\\5ο Εξάμηνο\\ΗΥ359\\CS359-PROJECT\\src\\main\\webapp\\logfile.txt"));
-        System.setOut(fileOut);
+//        PrintStream fileOut = new PrintStream(new File("C:\\Users\\Nikos Lasithiotakis\\Desktop\\CSD\\5ο Εξάμηνο\\ΗΥ359\\CS359-PROJECT\\src\\main\\webapp\\logfile.txt"));
+//        System.setOut(fileOut);
         String header = request.getHeader("Request-Type");
         if (header.equals("Get-Keeping")) {
             try {
@@ -190,11 +190,12 @@ public class BookingServlet extends HttpServlet {
                 valuesList.add(stringvalue);
             }
             System.out.println(valuesList);
+            List<String> uniqueValuesList = removeDuplicates(valuesList);
             ArrayList<String> keepers = new ArrayList<String>();
             EditPetKeepersTable ept = new EditPetKeepersTable();
-            for (int q = 0; q < valuesList.size(); q++) {
+            for (int q = 0; q < uniqueValuesList.size(); q++) {
                 try {
-                    keepers.add(ept.getKeepersById(valuesList.get(q)));
+                    keepers.add(ept.getKeepersById(uniqueValuesList.get(q)));
                 } catch (SQLException | ClassNotFoundException ex) {
                     response.setStatus(500);
                     Logger.getLogger(BookingServlet.class.getName()).log(Level.SEVERE, null, ex);
@@ -232,6 +233,11 @@ public class BookingServlet extends HttpServlet {
                 Logger.getLogger(BookingServlet.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+    }
+
+    public static List<String> removeDuplicates(List<String> list) {
+        Set<String> set = new HashSet<>(list);
+        return new ArrayList<>(set);
     }
 
     /**
