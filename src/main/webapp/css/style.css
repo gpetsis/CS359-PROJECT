@@ -140,7 +140,7 @@ div {
 th, td {
     border: 1px solid #dddddd;
     text-align: left;
-    padding: 8px; /* Adjust the padding value as needed */
+    padding: 8px;
 }
 
 #chartsDiv {
