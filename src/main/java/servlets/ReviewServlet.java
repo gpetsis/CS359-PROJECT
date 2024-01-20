@@ -7,15 +7,20 @@ package servlets;
 
 import database.EditReviewsTable;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintStream;
 import java.io.PrintWriter;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import mainClasses.Review;
 
 /**
  *
@@ -75,6 +80,8 @@ public class ReviewServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        PrintStream fileOut = new PrintStream(new File("C:\\Users\\Nikos Lasithiotakis\\Desktop\\CSD\\5ο Εξάμηνο\\ΗΥ359\\CS359-PROJECT\\src\\main\\webapp\\logfile.txt"));
+        System.setOut(fileOut);
         String requestString = "";
         BufferedReader in = new BufferedReader(new InputStreamReader(request.getInputStream()));
         String line = in.readLine();
@@ -84,11 +91,32 @@ public class ReviewServlet extends HttpServlet {
         }
         System.out.println(requestString);
         EditReviewsTable ert = new EditReviewsTable();
+        Review r = new Review();
+        r = ert.jsonToReview(requestString);
+        ArrayList<Review> keeperReviews = new ArrayList<Review>();
         try {
-            ert.addReviewFromJSON(requestString);
+            keeperReviews = ert.databaseTokeeperReviews(String.valueOf(r.getKeeper_id()));
+        } catch (SQLException | ClassNotFoundException ex) {
+            System.out.println(ex);
+            response.setStatus(500);
+            Logger.getLogger(ReviewServlet.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        try {
+            if (keeperReviews.size() == 0) {
+                ert.addReviewFromJSON(requestString);
+            } else {
+                String review_id = ert.getReviewId(r);
+                ert.updateReviewText(r, review_id);
+                ert.updateReviewScore(r, review_id);
+            }
         } catch (ClassNotFoundException ex) {
+            System.out.println(ex);
             response.setStatus(702);
             Logger.getLogger(BookingServlet.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            System.out.println(ex);
+            response.setStatus(500);
+            Logger.getLogger(ReviewServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
