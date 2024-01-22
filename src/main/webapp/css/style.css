@@ -229,3 +229,18 @@ a:hover {
 .star:hover, .star.selected {
     color: gold;
 }
+
+.message-container {
+    margin: 20px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.sender-owner {
+    color: black;
+}
+
+.sender-keeper {
+    color: black;
+}

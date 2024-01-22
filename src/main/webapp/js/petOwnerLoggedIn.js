@@ -338,16 +338,25 @@ function createTableFromJSONBooking(data) {
     return html;
 }
 
+var activeBookingExists = false;
+
+var booking_id;
+
 function activeBooking(){
     var xhr = new XMLHttpRequest();
     xhr.onload = function () {
         if (xhr.readyState === 4 && xhr.status === 200) {
             console.log("No Accepted Request");
         } else if (xhr.status === 703){
+            extractBookingId(JSON.parse(xhr.responseText));
+            console.log(booking_id);
             var labelFinished = document.getElementById('labelFinished');
             var finished = document.getElementById('finishedButton');
+            var messages = document.getElementById('messages');
             labelFinished.style.display = 'block';
             finished.style.display = 'block';
+            messages.style.display = 'block';
+            activeBookingExists = true;
             $("#ajaxContent6").html(createTableFromJSONBooking(JSON.parse(xhr.responseText)));
         } else if (xhr.status !== 200) {
             console.log("No Accepted Request");
@@ -358,6 +367,10 @@ function activeBooking(){
     xhr.setRequestHeader("Request-Type", owner_id);
     xhr.setRequestHeader("Content-type", "application/json");
     xhr.send();
+}
+
+function extractBookingId(booking) {
+    booking_id = booking.booking_id;
 }
 
 function getFinishedBooking(){
@@ -469,6 +482,10 @@ async function doRequests(){
     activeBooking();
     await new Promise(r => setTimeout(r, 1000));
     getFinishedBooking();
+    await new Promise(r => setTimeout(r, 1000));
+    if(activeBookingExists){
+        getMessages();
+    }
 }
 
 $(document).ready(doRequests())
@@ -499,18 +516,70 @@ function rateKeeper(rating) {
     console.log('Rated:', rating);
 }
 
-function messages(){
+function getMessages(){
     var xhr = new XMLHttpRequest();
     xhr.onload = function () {
         if (xhr.readyState === 4 && xhr.status === 200) {
-            console.log(xhr.responseText);
-            $("#ajaxContent5").html("Your booking is finished.");
+            displayMessages(JSON.parse(xhr.responseText));
         } else if (xhr.status !== 200) {
-            $("#ajaxContent5").html("Something went wrong.");
+            $("#messageContainer").html("Failed");
             return;
         }
     };
     xhr.open('GET', 'MessageServlet');
+    xhr.setRequestHeader("BookingId", booking_id);
     xhr.setRequestHeader("Content-type", "application/json");
     xhr.send();
+}
+
+function displayMessages(messages) {
+    const container = document.getElementById('messageContainer');
+    messages.forEach(message => {
+        const div = document.createElement('div');
+        div.className = 'message-container';
+
+        const senderClass = message.sender === 'owner' ? 'sender-owner' : 'sender-keeper';
+        div.innerHTML = `<p class="${senderClass}">${message.sender}: ${message.message}</p>
+                         <p>${message.datetime}</p>`;
+        container.appendChild(div);
+    });
+}
+
+function getCurrentDateTime() {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    const seconds = String(now.getSeconds()).padStart(2, '0');
+
+    const currentDateTime = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+    return currentDateTime;
+}
+
+function sendMessage(){
+    const message = document.getElementById("message").value;
+    var jsonData = {};
+    jsonData['booking_id'] = booking_id;
+    jsonData['message'] = message;
+    jsonData['sender'] = "owner";
+    jsonData['datetime'] = getCurrentDateTime();
+    for (let key in jsonData) {
+        if (jsonData.hasOwnProperty(key)) {
+            console.log(key + ": " + jsonData[key]);
+        }
+    }
+    var xhr = new XMLHttpRequest();
+    xhr.onload = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            $("#ajaxMessage").html("Message sent");
+        } else if (xhr.status !== 200) {
+            $("#ajaxMessage").html("Something went wrong.");
+            return;
+        }
+    };
+    xhr.open('POST', 'MessageServlet');
+    xhr.setRequestHeader("Content-type", "application/json");
+    xhr.send(JSON.stringify(jsonData));
 }

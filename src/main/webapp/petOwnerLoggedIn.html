@@ -90,6 +90,17 @@
         </div>
         <div id="ajaxContent5"></div>
         <br><br>
+        <div id="messages" style="display: none">
+            <h2>Messages</h2>
+            <div id="messageContainer" style="overflow-y: scroll ; border: 3px solid black; height:300px;"></div>
+            <br>
+            <textarea id="message" name="message" rows="4" cols="50"></textarea>
+            <br><br>
+            <button id="sendMessage" onclick="sendMessage()">Send</button>
+            <br><br>
+            <div id="ajaxMessage"></div>
+        </div>
+        <br><br>
         <button id="showAvailableKeepers" onclick="checkPet()">Show Available Keepers</button>
         <br><br>
         <div id="dates">
@@ -124,7 +135,6 @@
         <br>
         <div id="ajaxContent8"></div>
         <br>
-        <button id="messages" onclick="messages()">Click</button>
         <button id="logout" onclick="logout()">Logout</button>
         <br><br>
     </body>
