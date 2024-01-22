@@ -65,7 +65,8 @@ public class MessageServlet extends HttpServlet {
         //booking_id
         EditMessagesTable emt = new EditMessagesTable();
         try {
-            ArrayList<Message> messages = emt.databaseToMessage(1);
+            int bookingId = Integer.valueOf(request.getHeader("BookingId"));
+            ArrayList<Message> messages = emt.databaseToMessage(bookingId);
             ArrayList<String> messagesToString = new ArrayList<String>();
             String tempMessage;
             for (int i = 0; i < messages.size(); i++) {
