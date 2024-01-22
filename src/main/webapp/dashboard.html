@@ -33,7 +33,15 @@ and open the template in the editor.
         </div>
         <br>
         <div id="ajaxContentCurrentKeeping"></div>
-
+        <br><br>
+        
+        <div id="messages" style="display: none">
+            <h1>Messages</h1>
+            <div style="overflow-y: scroll; height:400px; border: 3px solid black;" id="keepingMessagesDiv"></div>
+            <textarea id="textareaMessage" style="width: 50%;"></textarea>
+            <input type="button" onclick="sendNewMessage()" value="Send">
+        </div>
+        
          
         <div id="chatGPTdiv">
             <h1>Ask ChatGPT</h1>

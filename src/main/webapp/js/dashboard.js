@@ -1,6 +1,7 @@
 var keeperId;
 var keeperBookings;
 var petInfo = [];
+var bookingId;
 
 $(document).ready(loadData());
 
@@ -96,9 +97,12 @@ function loadCurrentKeeping() {
     xhr.onload = function () {
         if (xhr.readyState === 4 && xhr.status === 200) {
             var response = JSON.parse(xhr.responseText);
-            $('#ajaxMessagesDiv').html(response);
             if(response['keeper_id'] != 0) {
+                $('#ajaxMessagesDiv').html(response);
                 showCurrentKeeping(response);
+                console.log("Keeping: " + xhr.responseText);
+                bookingId = response['booking_id'];
+                loadMessages(bookingId);
             }
         } else if (xhr.status !== 200) {
             $("#ajaxMessagesDiv").html("<h3>Error accepting request!</h3>");
@@ -110,6 +114,85 @@ function loadCurrentKeeping() {
     xhr.setRequestHeader("Keeper-Id", keeperId);
     xhr.setRequestHeader("Request-Type", "Get-Keeping");
     xhr.send();
+}
+
+function loadMessages(bookingId) {
+    var xhr = new XMLHttpRequest();
+
+    xhr.onload = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            var response = xhr.responseText;
+            displayMessages(JSON.parse(response));
+            console.log(response);
+        } else if (xhr.status !== 200) {
+            $("#ajaxMessagesDiv").html("<h3>Error accepting request!</h3>");
+        }
+    };
+
+    xhr.open('GET', 'MessageServlet');
+    xhr.setRequestHeader("BookingId", bookingId);
+    xhr.send();
+}
+
+function sendNewMessage() {
+    var xhr = new XMLHttpRequest();
+    var message = document.getElementById('textareaMessage').value;
+
+    xhr.onload = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            var response = xhr.responseText;
+            displayMessages(JSON.parse(response));
+            console.log(response);
+        } else if (xhr.status !== 200) {
+            $("#ajaxMessagesDiv").html("<h3>Error accepting request!</h3>");
+        }
+    };
+
+    var currentTime = getCurrentDateTime();
+    var body = {
+        "booking_id": bookingId,
+        "sender": "keeper",
+        "datetime": currentTime,
+        "message": message
+    }
+
+    console.log(body);
+    xhr.open('POST', 'MessageServlet');
+    xhr.send();
+}
+
+function getCurrentDateTime() {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    const seconds = String(now.getSeconds()).padStart(2, '0');
+
+    const currentDateTime = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+    return currentDateTime;
+}
+
+function displayMessages(messages) {
+    const container = document.getElementById('keepingMessagesDiv');
+    const messagesDiv = document.getElementById('messages');
+    messagesDiv.style.display = 'block';
+
+    messages.forEach(message => {
+        const div = document.createElement('div');
+        div.className = 'message-container';
+
+        const senderClass = message.sender === 'owner' ? 'sender-owner' : 'sender-keeper';
+        div.innerHTML = `<p class="${senderClass}">${message.sender}: ${message.message}</p>
+                         <p>${message.datetime}</p>`;
+
+        container.appendChild(div);
+    });
+}
+
+function showMessages(messages) {
+    
 }
 
 function showCurrentKeeping(keeping) {
