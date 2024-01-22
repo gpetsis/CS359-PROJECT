@@ -6,7 +6,9 @@
 package servlets;
 
 import database.EditMessagesTable;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -91,6 +93,21 @@ public class MessageServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        String requestString = "";
+        BufferedReader in = new BufferedReader(new InputStreamReader(request.getInputStream()));
+        String line = in.readLine();
+        while (line != null) {
+            requestString += line;
+            line = in.readLine();
+        }
+        System.out.println(requestString);
+        EditMessagesTable emt = new EditMessagesTable();
+        try {
+            emt.addMessageFromJSON(requestString);
+        } catch (ClassNotFoundException ex) {
+            response.setStatus(409);
+            Logger.getLogger(MessageServlet.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
