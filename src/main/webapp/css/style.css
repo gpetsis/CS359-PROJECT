@@ -244,3 +244,7 @@ a:hover {
 .sender-keeper {
     color: black;
 }
+
+#messages {
+    text-align: center;
+}
