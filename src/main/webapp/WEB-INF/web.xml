@@ -51,6 +51,10 @@
         <servlet-name>ReviewServlet</servlet-name>
         <servlet-class>servlets.ReviewServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>MessageServlet</servlet-name>
+        <servlet-class>servlets.MessageServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Register</servlet-name>
         <url-pattern>/Register</url-pattern>
@@ -107,5 +111,9 @@
     <servlet-mapping>
         <servlet-name>ReviewServlet</servlet-name>
         <url-pattern>/ReviewServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>MessageServlet</servlet-name>
+        <url-pattern>/MessageServlet</url-pattern>
     </servlet-mapping>
 </web-app>
