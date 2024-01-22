@@ -498,3 +498,19 @@ function rateKeeper(rating) {
     }
     console.log('Rated:', rating);
 }
+
+function messages(){
+    var xhr = new XMLHttpRequest();
+    xhr.onload = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            console.log(xhr.responseText);
+            $("#ajaxContent5").html("Your booking is finished.");
+        } else if (xhr.status !== 200) {
+            $("#ajaxContent5").html("Something went wrong.");
+            return;
+        }
+    };
+    xhr.open('GET', 'MessageServlet');
+    xhr.setRequestHeader("Content-type", "application/json");
+    xhr.send();
+}
