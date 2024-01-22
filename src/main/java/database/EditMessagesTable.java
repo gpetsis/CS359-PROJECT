@@ -34,7 +34,7 @@ public class EditMessagesTable {
         return msg;
     }
 
-    public String reviewToJSON(Message msg) {
+    public String messageToJSON(Message msg) {
         Gson gson = new Gson();
 
         String json = gson.toJson(msg, Message.class);
