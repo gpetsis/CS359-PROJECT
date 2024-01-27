@@ -93,7 +93,7 @@ public class ReviewServlet extends HttpServlet {
         r = ert.jsonToReview(requestString);
         ArrayList<Review> keeperReviews = new ArrayList<Review>();
         try {
-            keeperReviews = ert.databaseTokeeperReviews(String.valueOf(r.getKeeper_id()));
+            keeperReviews = ert.databaseTokeeperReviewsWithOwner(String.valueOf(r.getKeeper_id()), String.valueOf(r.getOwner_id()));
         } catch (SQLException | ClassNotFoundException ex) {
             System.out.println(ex);
             response.setStatus(500);
