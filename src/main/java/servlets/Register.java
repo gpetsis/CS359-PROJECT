@@ -53,21 +53,37 @@ public class Register extends HttpServlet {
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String getType = request.getHeader("User");
+        System.out.println(getType);
         HttpSession session = request.getSession();
-
-        EditPetKeepersTable epk = new EditPetKeepersTable();
-        try {
-            PetKeeper petkeeper = epk.databaseToPetKeepers(session.getAttribute("loggedIn").toString());
-
-            if (petkeeper != null) {
-                response.getWriter().write(epk.petKeeperToJSON(petkeeper));
-                response.setStatus(200);
-            } else {
-                response.setStatus(404);
+        if (getType.equals("PetOwner")) {
+            EditPetOwnersTable epo = new EditPetOwnersTable();
+            try {
+                PetOwner petowner = epo.databaseToPetOwners(session.getAttribute("loggedIn").toString());
+                if (petowner != null) {
+                    response.getWriter().write(epo.petOwnerToJSON(petowner));
+                    response.setStatus(200);
+                } else {
+                    response.setStatus(404);
+                }
+            } catch (SQLException | ClassNotFoundException ex) {
+                Logger.getLogger(Register.class.getName()).log(Level.SEVERE, null, ex);
             }
-        } catch (Exception ex) {
-            response.setStatus(404);
-            Logger.getLogger(Register.class.getName()).log(Level.SEVERE, null, ex);
+        } else {
+            EditPetKeepersTable epk = new EditPetKeepersTable();
+            try {
+                PetKeeper petkeeper = epk.databaseToPetKeepers(session.getAttribute("loggedIn").toString());
+
+                if (petkeeper != null) {
+                    response.getWriter().write(epk.petKeeperToJSON(petkeeper));
+                    response.setStatus(200);
+                } else {
+                    response.setStatus(404);
+                }
+            } catch (Exception ex) {
+                response.setStatus(404);
+                Logger.getLogger(Register.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
 
@@ -80,7 +96,12 @@ public class Register extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+//        PrintStream fileOut = new PrintStream(new File("C:\\Users\\Nikos Lasithiotakis\\Desktop\\CSD\\5ο Εξάμηνο\\ΗΥ359\\CS359-PROJECT\\src\\main\\java\\database\\logfile.txt"));
+//        System.setOut(fileOut);
+        String getUserType = request.getHeader("User");
+        System.out.println(getUserType);
         HttpSession session = request.getSession();
+
         EditPetKeepersTable epk = new EditPetKeepersTable();
 
         SQLException returnEx;
@@ -93,17 +114,29 @@ public class Register extends HttpServlet {
             requestString += line;
             line = in.readLine();
         }
-
-        PetKeeper keeper = epk.jsonToPetKeeper(requestString);
-        try {
-            response.getWriter().println("Started updating");
-            returnEx = epk.updatePetKeeper(keeper);
-            response.getWriter().println("Completed");
-            response.setStatus(200);
-        } catch (Exception ex) {
-            response.setStatus(406);
-            response.getWriter().println("Error updating");
-            Logger.getLogger(Register.class.getName()).log(Level.SEVERE, null, ex);
+        if (getUserType.equals("PetOwner")) {
+            EditPetOwnersTable epo = new EditPetOwnersTable();
+            PetOwner owner = epo.jsonToPetOwner(requestString);
+            try {
+                returnEx = epo.updatePetOwner(owner);
+                response.setStatus(200);
+            } catch (Exception ex) {
+                response.setStatus(406);
+                response.getWriter().println("Error updating");
+                Logger.getLogger(Register.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else {
+            PetKeeper keeper = epk.jsonToPetKeeper(requestString);
+            try {
+                response.getWriter().println("Started updating");
+                returnEx = epk.updatePetKeeper(keeper);
+                response.getWriter().println("Completed");
+                response.setStatus(200);
+            } catch (Exception ex) {
+                response.setStatus(406);
+                response.getWriter().println("Error updating");
+                Logger.getLogger(Register.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
 

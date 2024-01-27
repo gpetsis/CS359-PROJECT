@@ -10,6 +10,7 @@ import mainClasses.PetKeeper;
 import database.DB_Connection;
 import java.io.FileNotFoundException;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -43,7 +44,13 @@ public class EditPetKeepersTable {
         return json;
     }
     
-   
+    public void deletePetKeeper(String id) throws SQLException, ClassNotFoundException {
+        Connection con = DB_Connection.getConnection();
+        Statement stmt = con.createStatement();
+        String update = "DELETE FROM petkeepers WHERE keeper_id=" + id;
+        stmt.executeUpdate(update);
+    }
+
     
     public void updatePetKeeper(String username,String personalpage) throws SQLException, ClassNotFoundException{
         Connection con = DB_Connection.getConnection();
@@ -151,8 +158,23 @@ public class EditPetKeepersTable {
         return null;
     }
 
-    
-     public ArrayList<PetKeeper> getAvailableKeepers(String type) throws SQLException, ClassNotFoundException {
+    public int numberOfKeepers() {
+        try {
+            Connection con;
+            con = DB_Connection.getConnection();
+            String sql = "SELECT COUNT(*) AS count FROM petkeepers";
+            PreparedStatement preparedStatement = con.prepareStatement(sql);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                return resultSet.getInt("count");
+            }
+        } catch (SQLException | ClassNotFoundException ex) {
+            Logger.getLogger(EditPetsTable.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return -1;
+    }
+
+    public ArrayList<PetKeeper> getAvailableKeepers(String type) throws SQLException, ClassNotFoundException {
         Connection con = DB_Connection.getConnection();
         Statement stmt = con.createStatement();
         ArrayList<PetKeeper> keepers = new ArrayList<PetKeeper>();
@@ -230,6 +252,24 @@ public class EditPetKeepersTable {
         }
         return null;
     }
+
+    public String getKeepersById(String id) throws SQLException, ClassNotFoundException {
+        Connection con = DB_Connection.getConnection();
+        Statement stmt = con.createStatement();
+
+        ResultSet rs;
+        try {
+            rs = stmt.executeQuery("SELECT * FROM petkeepers WHERE keeper_id = '" + id + "'");
+            rs.next();
+            String json = DB_Connection.getResultsToJSON(rs);
+            return json;
+        } catch (Exception e) {
+            System.err.println("Got an exception! ");
+            System.err.println(e.getMessage());
+        }
+        return null;
+    }
+
 
 
      public void createPetKeepersTable() throws SQLException, ClassNotFoundException {

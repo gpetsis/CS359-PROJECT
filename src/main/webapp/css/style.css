@@ -64,6 +64,13 @@ body {
     align-items: center;
 }
 
+#ajaxNumberOfKeepings {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    align-items: center;
+}
+
 form {
     font-weight: bolder;
     font-size: large;
@@ -122,7 +129,8 @@ div {
     width: 100%;
     display: flex;
     align-items: center;
-    flex-direction: column;
+    flex-direction: row;
+    justify-content: space-around;
 }
 
 #login-div {
@@ -136,6 +144,18 @@ div {
     max-height: 30%;
 }
 
+th, td {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+}
+
+#chartsDiv {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 #submit-button {
     margin-top: 5%;
 }
@@ -145,20 +165,21 @@ table {
     color: white;
 }
 
-#myTable {
+#myTable, #myTable2, #myTable3 {
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
     color: white;
     font-size: x-large;
 }
 
-#ajaxContent {
+#ajaxContent, #ajaxContentRequests, #ajaxContentCurrentKeeping, #ajaxContent2, #ajaxContent3, #ajaxContent4, #ajaxContent5, #ajaxContent6, #keepers, #ajaxContent7, #chatGPTdiv, #messageDiv{
     display: flex;
     flex-direction: column;
     align-items: center;
+    text-align: center;
     width: 100%;
 }
 
-input {
+input, button {
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
     color: aliceblue;
     background-color: #2f554f;
@@ -176,4 +197,61 @@ select {
 
 #edit-to-database-button {
     align-items: center;
+}
+
+#dates, #finishedButton, #websites{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+a {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px 20px;
+    text-decoration: none;
+    background-color: darkslategray;
+    color: #fff;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+a:hover {
+    border: solid black;
+    background-color: darkslategray;
+}
+
+.stars {
+    display: inline-block;
+    font-size: 24px;
+}
+
+.star {
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.star:hover, .star.selected {
+    color: gold;
+}
+
+.message-container {
+    margin: 20px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.sender-owner {
+    color: black;
+}
+
+.sender-keeper {
+    color: black;
+}
+
+#messages {
+    text-align: center;
 }

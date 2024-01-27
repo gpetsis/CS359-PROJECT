@@ -5,7 +5,10 @@
  */
 package servlets;
 
+import database.EditBookingsTable;
 import database.EditPetKeepersTable;
+import database.EditPetOwnersTable;
+import database.EditPetsTable;
 import java.io.BufferedReader;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -17,6 +20,7 @@ import java.io.InputStreamReader;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import mainClasses.PetKeeper;
+import mainClasses.PetOwner;
 
 public class Login extends HttpServlet {
 
@@ -45,18 +49,65 @@ public class Login extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        HttpSession session=request.getSession();
-        if(session.getAttribute("loggedIn")!=null){
-            response.setStatus(200);
-//           Person p=Resources.registeredUsers.get(session.getAttribute("loggedIn").toString());
-//           response.getWriter().write(p.getUsername());
-        }
-        else{
-            response.setStatus(403);
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+//        PrintStream fileOut = new PrintStream(new File("C:\\CSD\\PENDING\\HY-359\\PROJECT\\CS359-PROJECT\\src\\main\\webapp\\logfile.txt"));
+//        System.setOut(fileOut);
+        String header = request.getHeader("Request-Type");
+        if (header.equals("Number-Of-Cats")) {
+            handleNumberOfCats(request, response);
+        } else if (header.equals("Number-Of-Dogs")) {
+            handleNumberOfDogs(request, response);
+        } else if (header.equals("Number-Of-Owners")) {
+            handleNumberOfOwners(request, response);
+        } else if (header.equals("Number-Of-Keepers")) {
+            handleNumberOfKeepers(request, response);
+        } else if (header.equals("Total-Earnings")) {
+            handleTotalEarnings(request, response);
+        } else {
+            HttpSession session = request.getSession();
+            if (session.getAttribute("loggedIn") != null) {
+                response.setStatus(200);
+            } else {
+                response.setStatus(403);
+            }
         }
     }
+
+    public void handleTotalEarnings(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        EditBookingsTable ebt = new EditBookingsTable();
+        int totalEarnings = ebt.totalEarnings();
+        response.getWriter().write(String.valueOf(totalEarnings));
+        System.out.println("Total earnings: " + totalEarnings);
+    }
+
+    public void handleNumberOfOwners(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        EditPetOwnersTable eot = new EditPetOwnersTable();
+        int numberOfOwners = eot.numberOfOwners();
+        response.getWriter().write(String.valueOf(numberOfOwners));
+        System.out.println("Owners: " + numberOfOwners);
+    }
+
+    public void handleNumberOfKeepers(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        EditPetKeepersTable ekt = new EditPetKeepersTable();
+        int numberOfCats = ekt.numberOfKeepers();
+        response.getWriter().write(String.valueOf(numberOfCats));
+        System.out.println(numberOfCats);
+    }
+
+    public void handleNumberOfCats(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        EditPetsTable ept = new EditPetsTable();
+        int numberOfCats = ept.numberOfCats();
+        response.getWriter().write(String.valueOf(numberOfCats));
+        System.out.println(numberOfCats);
+    }
+
+    public void handleNumberOfDogs(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        EditPetsTable ept = new EditPetsTable();
+        int numberOfDogs = ept.numberOfDogs();
+        response.getWriter().write(String.valueOf(numberOfDogs));
+        System.out.println(numberOfDogs);
+    }
+
 
     /**
      * Handles the HTTP <code>POST</code> method.
@@ -68,10 +119,9 @@ public class Login extends HttpServlet {
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String getUserType = request.getHeader("User");
+        System.out.println(getUserType);
         HttpSession session = request.getSession();
-//        PrintStream fileOut = new PrintStream(new File("C:/CSD/PENDING/HY-359/Assignment3/Ask2/src/main/java/database/logfile.txt"));
-//        System.setOut(fileOut);
-
         String requestString = "";
 
         BufferedReader in = new BufferedReader(new InputStreamReader(request.getInputStream()));
@@ -81,23 +131,45 @@ public class Login extends HttpServlet {
             line = in.readLine();
         }
 
-        EditPetKeepersTable epk = new EditPetKeepersTable();
-        PetKeeper keeper = epk.jsonToPetKeeper(requestString);
-        System.out.println(keeper.getUsername() + keeper.getPassword());
+        if (getUserType.equals("PetOwner")) {
+            EditPetOwnersTable epo = new EditPetOwnersTable();
+            PetOwner owner = epo.jsonToPetOwner(requestString);
+            System.out.println(owner.getUsername() + owner.getPassword());
 
-        try {
-            keeper = epk.databaseToPetKeepers(keeper.getUsername(), keeper.getPassword());
-            System.out.println(keeper.getUsername() + keeper.getPassword());
-            if (keeper != null) {
-                session.setAttribute("loggedIn", keeper.getUsername());
-                response.setStatus(200);
-            } else {
+            try {
+                owner = epo.databaseToPetOwners(owner.getUsername(), owner.getPassword());
+                System.out.println(owner.getUsername() + owner.getPassword());
+                if (owner != null) {
+                    session.setAttribute("loggedIn", owner.getUsername());
+                    response.setStatus(200);
+                } else {
+                    response.setStatus(403);
+                }
+
+            } catch (Exception ex) {
+                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
                 response.setStatus(403);
             }
 
-        } catch (Exception ex) {
-            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
-            response.setStatus(403);
+        } else {
+            EditPetKeepersTable epk = new EditPetKeepersTable();
+            PetKeeper keeper = epk.jsonToPetKeeper(requestString);
+            System.out.println(keeper.getUsername() + keeper.getPassword());
+
+            try {
+                keeper = epk.databaseToPetKeepers(keeper.getUsername(), keeper.getPassword());
+                System.out.println(keeper.getUsername() + keeper.getPassword());
+                if (keeper != null) {
+                    session.setAttribute("loggedIn", keeper.getUsername());
+                    response.setStatus(200);
+                } else {
+                    response.setStatus(403);
+                }
+
+            } catch (Exception ex) {
+                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+                response.setStatus(403);
+            }
         }
     }
 

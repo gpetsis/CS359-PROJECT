@@ -4,14 +4,26 @@
         <servlet-name>Register</servlet-name>
         <servlet-class>servlets.Register</servlet-class>
     </servlet>
-<!--    <servlet>
+    <!--    <servlet>
         <servlet-name>Dog_Servlet</servlet-name>
         <servlet-class>servlets.Dog_Servlet</servlet-class>
     </servlet>
--->    
+-->
     <servlet>
         <servlet-name>Login</servlet-name>
         <servlet-class>servlets.Login</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>BookingServlet</servlet-name>
+        <servlet-class>servlets.BookingServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>LoggedIn</servlet-name>
+        <servlet-class>servlets.LoggedIn</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>PetServlet</servlet-name>
+        <servlet-class>servlets.PetServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>Logout</servlet-name>
@@ -26,15 +38,33 @@
         <servlet-name>GetStatistics</servlet-name>
         <servlet-class>servlets.GetStatistics</servlet-class>
     </servlet>
--->    <servlet-mapping>
+-->
+    <servlet>
+        <servlet-name>Admin</servlet-name>
+        <servlet-class>servlets.Admin</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>Keeper</servlet-name>
+        <servlet-class>servlets.Keeper</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ReviewServlet</servlet-name>
+        <servlet-class>servlets.ReviewServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>MessageServlet</servlet-name>
+        <servlet-class>servlets.MessageServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
         <servlet-name>Register</servlet-name>
         <url-pattern>/Register</url-pattern>
-    </servlet-mapping><!--
+    </servlet-mapping>
+    <!--
     <servlet-mapping>
         <servlet-name>Dog_Servlet</servlet-name>
         <url-pattern>/Dog_Servlet</url-pattern>
     </servlet-mapping>
--->    
+-->
     <servlet-mapping>
         <servlet-name>Login</servlet-name>
         <url-pattern>/Login</url-pattern>
@@ -58,4 +88,32 @@
             <max-age>11520</max-age>
         </cookie-config>
     </session-config>-->
+    <servlet-mapping>
+        <servlet-name>Admin</servlet-name>
+        <url-pattern>/Admin</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>LoggedIn</servlet-name>
+        <url-pattern>/LoggedIn</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>PetServlet</servlet-name>
+        <url-pattern>/PetServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Keeper</servlet-name>
+        <url-pattern>/Keeper</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>BookingServlet</servlet-name>
+        <url-pattern>/BookingServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ReviewServlet</servlet-name>
+        <url-pattern>/ReviewServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>MessageServlet</servlet-name>
+        <url-pattern>/MessageServlet</url-pattern>
+    </servlet-mapping>
 </web-app>

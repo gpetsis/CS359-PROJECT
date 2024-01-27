@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Admin Login</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>        
+        <script src="js/passwords.js"></script>
+        <script src="js/admin.js"></script>
+        
+        <link rel="stylesheet" href="css/style.css">
+    </head>
+    <body>
+        <h1>Admin Login Form</h1>
+        
+        <div id="login-div">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" title="Username longer than 8 characters, the first letter not a number" required>
+
+            <br>
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" title="8 to 15 characters, with at least one latin character, one number and one symbol" required>
+            <input type="button" onclick="show_password_login()" value="Password Visibility"><br>
+
+            <div id="response-div"></div>
+
+            <input type="button" id="submit-button" onclick="handle_admin_login()" value="Login">
+        </div>
+    </body>
+</html>

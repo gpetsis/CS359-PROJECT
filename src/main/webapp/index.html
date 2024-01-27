@@ -9,23 +9,32 @@ and open the template in the editor.
         <title>Login or register</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
         <script src="js/index.js" type="text/javascript"></script>
         
         <link rel="stylesheet" href="css/style.css">
         
     </head>
-    <input type="button" onclick="initializeDatabase()" value="Initialize">
+    <input type="button" onclick="location.href='adminlogin.html'" value="Admin Login">
     <body id="index-body">
         <h1>Pet keeping website</h1>
         
         <h2>Welcome to the page. If you have an account, click login, or register to create an account.</h2>
         <div id="main-div">    
-            <input type="button" class="index-buttons" onclick="location.href='login.html'" value="Login">
+            <input type="button" class="index-buttons" onclick="location.href='login.html'" value="Keeper Login">
+            <input type="button" class="index-buttons" onclick="location.href='petOwnerLogin.html'" value="Owner Login">
             <input type="button" class="index-buttons" onclick="location.href='register.html'" value="Register">
             <input type="button" class="index-buttons" onclick="location.href='pets.html'" value="Pets">
         </div>
-
+        <h2>Our Keepers</h2>
+        <div id="keepers"></div>
+        <h2>Useful Websites</h2>
+        <div id="websites">
+            <a href="https://www.i-pet.gr/" target="_blank">Visit i-Pet.gr</a>
+            <a href="https://allaboutpets.gr/katoikidia-zoa-gia-mesa-sto-spiti/" target="_blank">Visit allaboutpets.gr</a>
+            <a href="https://www.facebook.com/" class="fa fa-facebook">&nbsp&nbsp&nbspVisit Our Facebook Page</a>
+        </div>
+        <br><br>
     </body>
 </html>

@@ -1,16 +1,18 @@
 $(document).ready(function() {
-    var xhr = new XMLHttpRequest();
-    xhr.onload = function () {
-        if (xhr.readyState === 4 && xhr.status === 200) {
-            window.location.href = 'dashboard.html';
-        } else if (xhr.status !== 200) {
-            return;
-        }
-    };
+    if(window.location.href != 'http://localhost:8080/Ask2/adminlogin.html') {
+        var xhr = new XMLHttpRequest();
+        xhr.onload = function () {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                window.location.href = 'dashboard.html';
+            } else if (xhr.status !== 200) {
+                return;
+            }
+        };
 
-    xhr.open('GET', 'Register');
-    xhr.setRequestHeader("Content-type", "application/json");
-    xhr.send();
+        xhr.open('GET', 'Register');
+        xhr.setRequestHeader("Content-type", "application/json");
+        xhr.send();
+    }
 })
 
 function handle_login() {
@@ -34,6 +36,7 @@ function handle_login() {
     };
     xhr.open('POST', 'Login');
     xhr.setRequestHeader("Content-type", "application/json");
+    xhr.setRequestHeader("User", "-");
    
     console.log(JSON.stringify(jsonData));
     xhr.send(JSON.stringify(jsonData));
@@ -42,4 +45,17 @@ function handle_login() {
 
 function loadLoginPage() {
     window.location.href = 'dashboard.html';
+}
+
+function handle_admin_login() {
+    var username = document.getElementById("username").value;
+    var password = document.getElementById("password").value;
+    
+    if(username == "admin" && password == "admin12*") {
+        console.log("Welcome Master");
+        window.location.href = 'admindashboard.html';
+    } else {
+        console.log("You are not the Master");
+    }
+    
 }

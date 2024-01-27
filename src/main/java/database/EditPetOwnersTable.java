@@ -8,10 +8,9 @@ package database;
 import com.google.gson.Gson;
 import mainClasses.PetOwner;
 import database.DB_Connection;
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.PrintStream;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -26,9 +25,6 @@ import java.util.logging.Logger;
 public class EditPetOwnersTable {
 
     public SQLException addPetOwnerFromJSON(String json) throws ClassNotFoundException, FileNotFoundException {
-        PrintStream fileOut = new PrintStream(new File("C:/CSD/PENDING/HY-359/Assignment3/Ask2/src/main/java/database/logfile.txt"));
-        System.setOut(fileOut);
-        System.out.println("Here reeeee");
         PetOwner user = jsonToPetOwner(json);
         return addNewPetOwner(user);
     }
@@ -47,7 +43,12 @@ public class EditPetOwnersTable {
         return json;
     }
     
-   
+    public void deletePetOwner(String id) throws SQLException, ClassNotFoundException {
+        Connection con = DB_Connection.getConnection();
+        Statement stmt = con.createStatement();
+        String update = "DELETE FROM petowners WHERE owner_id=" + id;
+        stmt.executeUpdate(update);
+    }
     
     public void updatePetOwner(String username,String personalpage) throws SQLException, ClassNotFoundException{
         Connection con = DB_Connection.getConnection();
@@ -55,7 +56,23 @@ public class EditPetOwnersTable {
         String update="UPDATE petowners SET personalpage='"+personalpage+"' WHERE username = '"+username+"'";
         stmt.executeUpdate(update);
     }
-   
+
+    public int numberOfOwners() {
+        try {
+            Connection con;
+            con = DB_Connection.getConnection();
+            String sql = "SELECT COUNT(*) AS count FROM petowners";
+            PreparedStatement preparedStatement = con.prepareStatement(sql);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                return resultSet.getInt("count");
+            }
+        } catch (SQLException | ClassNotFoundException ex) {
+            Logger.getLogger(EditPetsTable.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return -1;
+    }
+
     public ArrayList<PetOwner> getOwners() throws SQLException, ClassNotFoundException {
         Connection con = DB_Connection.getConnection();
         Statement stmt = con.createStatement();
@@ -71,6 +88,25 @@ public class EditPetOwnersTable {
                 owners.add(owner);
             }
             return owners;
+        } catch (Exception e) {
+            System.err.println("Got an exception! ");
+            System.err.println(e.getMessage());
+        }
+        return null;
+    }
+
+    public PetOwner databaseToPetOwners(String username) throws SQLException, ClassNotFoundException {
+        Connection con = DB_Connection.getConnection();
+        Statement stmt = con.createStatement();
+
+        ResultSet rs;
+        try {
+            rs = stmt.executeQuery("SELECT * FROM petowners WHERE username = '" + username + "'");
+            rs.next();
+            String json = DB_Connection.getResultsToJSON(rs);
+            Gson gson = new Gson();
+            PetOwner user = gson.fromJson(json, PetOwner.class);
+            return user;
         } catch (Exception e) {
             System.err.println("Got an exception! ");
             System.err.println(e.getMessage());
@@ -114,6 +150,44 @@ public class EditPetOwnersTable {
         return null;
     }
 
+    public SQLException updatePetOwner(PetOwner user) throws ClassNotFoundException, FileNotFoundException {
+        try {
+            Connection con = DB_Connection.getConnection();
+
+            Statement stmt = con.createStatement();
+
+            String insertQuery = "UPDATE petowners SET "
+                    + "password='" + user.getPassword() + "',"
+                    + "firstname='" + user.getFirstname() + "',"
+                    + "lastname='" + user.getLastname() + "',"
+                    + "birthdate='" + user.getBirthdate() + "',"
+                    + "gender='" + user.getGender() + "',"
+                    + "country='" + user.getCountry() + "',"
+                    + "city='" + user.getCity() + "',"
+                    + "address='" + user.getAddress() + "',"
+                    + "personalpage='" + user.getPersonalpage() + "',"
+                    + "job='" + user.getJob() + "',"
+                    + "telephone='" + user.getTelephone() + "',"
+                    + "lat='" + user.getLat() + "',"
+                    + "lon='" + user.getLon() + "'"
+                    + " WHERE username='" + user.getUsername() + "'";
+            //stmt.execute(table);
+            System.out.println(insertQuery);
+            stmt.executeUpdate(insertQuery);
+            System.out.println("# The pet owner was successfully updated in the database.");
+
+            /* Get the member id from the database and set it to the member */
+            stmt.close();
+
+            return null;
+        } catch (SQLException ex) {
+            System.out.println(ex);
+            Logger.getLogger(EditPetKeepersTable.class.getName()).log(Level.SEVERE, null, ex);
+            return ex;
+        }
+    }
+
+
 
      public void createPetOwnersTable() throws SQLException, ClassNotFoundException {
 
@@ -137,7 +211,7 @@ public class EditPetOwnersTable {
                 + "    telephone VARCHAR(14),"
                   + "    lat DOUBLE,"
                 + "    lon DOUBLE,"
-                + " PRIMARY KEY (owner_id))";
+                 + " PRIMARY KEY (owner_id)) ON DELETE CASCADE";
         stmt.execute(query);
         stmt.close();
     }

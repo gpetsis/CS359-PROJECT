@@ -10,11 +10,14 @@ import com.google.gson.Gson;
 import database.DB_Connection;
 import java.io.FileNotFoundException;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.NoSuchElementException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -60,6 +63,38 @@ public class EditPetsTable {
             System.err.println(e.getMessage());
         }
         return null;
+    }
+
+    public int numberOfCats() {
+        try {
+            Connection con;
+            con = DB_Connection.getConnection();
+            String sql = "SELECT COUNT(*) AS count FROM pets WHERE type = 'cat'";
+            PreparedStatement preparedStatement = con.prepareStatement(sql);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                return resultSet.getInt("count");
+            }
+        } catch (SQLException | ClassNotFoundException ex) {
+            Logger.getLogger(EditPetsTable.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return -1;
+    }
+
+    public int numberOfDogs() {
+        try {
+            Connection con;
+            con = DB_Connection.getConnection();
+            String sql = "SELECT COUNT(*) AS count FROM pets WHERE type = 'dog'";
+            PreparedStatement preparedStatement = con.prepareStatement(sql);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                return resultSet.getInt("count");
+            }
+        } catch (SQLException | ClassNotFoundException ex) {
+            Logger.getLogger(EditPetsTable.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return -1;
     }
 
     public ArrayList<Pet> databaseToPets(String type, String breed, String fromWeight, String toWeight) throws SQLException, ClassNotFoundException {
@@ -110,6 +145,7 @@ public class EditPetsTable {
         Connection con = DB_Connection.getConnection();
         Statement stmt = con.createStatement();
         Pet pet = new Pet();
+        pet = null;
         ResultSet rs;
         try {
             rs = stmt.executeQuery("SELECT * FROM pets WHERE owner_id= '" + id + "'");
@@ -119,6 +155,29 @@ public class EditPetsTable {
                 Gson gson = new Gson();
                 pet = gson.fromJson(json, Pet.class);
                
+            }
+            return pet;
+        } catch (Exception e) {
+            System.err.println("Got an exception! ");
+            System.err.println(e.getMessage());
+        }
+        return null;
+    }
+
+    public Pet petWithId(String id) throws SQLException, ClassNotFoundException {
+        Connection con = DB_Connection.getConnection();
+        Statement stmt = con.createStatement();
+        Pet pet = new Pet();
+        pet = null;
+        ResultSet rs;
+        try {
+            rs = stmt.executeQuery("SELECT * FROM pets WHERE pet_id= '" + id + "'");
+
+            while (rs.next()) {
+                String json = DB_Connection.getResultsToJSON(rs);
+                Gson gson = new Gson();
+                pet = gson.fromJson(json, Pet.class);
+
             }
             return pet;
         } catch (Exception e) {
