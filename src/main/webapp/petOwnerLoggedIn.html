@@ -118,12 +118,19 @@
         <br><br>
         <button id="showAvailableKeepers" onclick="checkPet()">Show Available Keepers</button>
         <br><br>
-        <div id="dates">
-            <label id="fromDateLabel" style="display: none">From Date</label>
-            <input type="date" value="2024-01-25" id="fromDate" onchange="updateCost()" style="display: none">
+        <div id="dates" style="display: none">
+            <h2>Select Sorting Option:</h2>
+            <input type="radio" id="byDistance" name="sortingOption" value="distance" onchange="handleRadioButtonChange()"> 
+            <label for="byDistance">By Distance</label><br>
+            <input type="radio" id="byDuration" name="sortingOption" value="duration" onchange="handleRadioButtonChange()"> 
+            <label for="byTime">By Duration</label><br>
+            <input type="radio" id="byPrice" name="sortingOption" value="price" onchange="handleRadioButtonChange()"> 
+            <label for="byPrice">By Price</label><br><br>
+            <label id="fromDateLabel">From Date</label>
+            <input type="date" value="2024-01-29" id="fromDate" onchange="updateCost()">
             <br>
-            <label id="toDateLabel" style="display: none">To Date</label>
-            <input type="date" value="2024-01-25" id="toDate" onchange="updateCost()" style="display: none">
+            <label id="toDateLabel">To Date</label>
+            <input type="date" value="2024-01-29" id="toDate" onchange="updateCost()">
         </div>
         <br>
         <div id="ajaxContent3"></div>
