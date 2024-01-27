@@ -65,7 +65,7 @@ public class PetServlet extends HttpServlet {
         // PrintStream fileOut = new PrintStream(new File("C:\\CSD\\PENDING\\HY-359\\PROJECT\\CS359-PROJECT\\src\\main\\java\\database\\logfile.txt"));
         // System.setOut(fileOut);
         String petId = request.getHeader("Pet-Id");
-        if (petId == null) {
+        if (petId.equals("-")) {
             String get_owner_id = String.valueOf(request.getHeader("owner_id"));
             System.out.println(get_owner_id);
             EditPetsTable ept = new EditPetsTable();
