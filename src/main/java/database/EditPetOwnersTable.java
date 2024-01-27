@@ -211,7 +211,7 @@ public class EditPetOwnersTable {
                 + "    telephone VARCHAR(14),"
                   + "    lat DOUBLE,"
                 + "    lon DOUBLE,"
-                + " PRIMARY KEY (owner_id))";
+                 + " PRIMARY KEY (owner_id)) ON DELETE CASCADE";
         stmt.execute(query);
         stmt.close();
     }

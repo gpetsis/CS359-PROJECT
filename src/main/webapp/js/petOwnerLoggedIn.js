@@ -1,3 +1,5 @@
+var requested = false;
+
 function findUserData(){
     var xhr = new XMLHttpRequest();
     xhr.onload = function () {
@@ -588,7 +590,35 @@ function sendMessage(){
     xhr.send(JSON.stringify(jsonData));
 }
 
-var requested = false;
+function handle_update_pet() {
+    let pet_id = document.getElementById('update-pet-id').value;
+    let weight = document.getElementById('update-pet-weight').value;
+    
+    const xhr = new XMLHttpRequest();
+    xhr.onload = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            let object = xhr.responseText;
+            console.log(object);
+            $("#ajaxContent-update").html("<h4>Updated pet to database successfully!</h4>");
+            
+            return false;
+        } else if (xhr.status !== 200) {
+            if(xhr.status === 404) {
+                $("#ajaxContent-update").html("<h3>Pet with this id not found!</h3>");
+            } else {
+                $("#ajaxContent-update").html("<h3>Error updating pet!</h3>");
+            }
+            return false;
+        };
+    }
+    
+    xhr.open("PUT", "http://localhost:4567/petWeight/" + pet_id + "/" + weight);
+    
+    xhr.setRequestHeader("Accept", "application/json");
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.send();
+}
+
 
 async function handleRadioButtonChange() {
     var selectedOption = document.querySelector('input[name="sortingOption"]:checked').value;

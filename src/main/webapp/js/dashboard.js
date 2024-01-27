@@ -32,6 +32,7 @@ function loadStatistics() {
             console.log(response);
             $("#ajaxNumberOfKeepings").append("<h2>Number of total bookings: " + response["numberOfBookings"] + "</h2>");
             $("#ajaxNumberOfKeepings").append("<h2>Number of total days booked: " + response["numberOfDays"] + "</h2>");
+            appendReviews(response["reviews"]);
         } else if (xhr.status !== 200) {
             $("#ajaxMessagesDiv").html("<h3>Error accepting request!</h3>");
         }
@@ -42,6 +43,22 @@ function loadStatistics() {
     xhr.setRequestHeader("Keeper-Id", keeperId);
     xhr.setRequestHeader("Request-Type", "Get-Statistics");
     xhr.send();
+}
+
+function appendReviews(reviews) {
+    var html = "<h2>Your Reviews</h2>"
+    html += "<table id='myTable'><tr><th>ReviewScore</th><th>ReviewText</th></tr>";
+    var reviewScore;
+    var reviewText;
+    for(let i = 0; i < reviews.length; i++) {
+        reviewScore = reviews[i]["reviewScore"];
+        reviewText = reviews[i]["reviewText"];
+        console.log(reviewScore, reviewText);
+
+        html += "<tr><td>" + reviewScore + "</td><td>" + reviewText + "</td></tr>";
+    }
+    html += "</table>";
+    $("#ajaxNumberOfKeepings").append(html);
 }
 
 function handleChatGPT(number) {
@@ -140,9 +157,7 @@ function sendNewMessage() {
 
     xhr.onload = function () {
         if (xhr.readyState === 4 && xhr.status === 200) {
-            var response = xhr.responseText;
-            displayMessages(JSON.parse(response));
-            console.log(response);
+            $("#ajaxMessagesDiv").html("<h4>Message Sent</h4>");
         } else if (xhr.status !== 200) {
             $("#ajaxMessagesDiv").html("<h3>Error accepting request!</h3>");
         }
@@ -158,7 +173,7 @@ function sendNewMessage() {
 
     console.log(body);
     xhr.open('POST', 'MessageServlet');
-    xhr.send();
+    xhr.send(JSON.stringify(body));
 }
 
 function getCurrentDateTime() {
@@ -387,5 +402,6 @@ function edit_database() {
     };
     xhr.open('PUT', 'Register');
     xhr.setRequestHeader('Content-type','application/x-www-form-urlencoded');
+    xhr.setRequestHeader('User', 'PetKeeper');
     xhr.send(JSON.stringify(jsonData));
 }

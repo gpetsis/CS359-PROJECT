@@ -220,6 +220,28 @@ public class EditBookingsTable {
         return null;
     }
 
+    public void deleteBookingOwner(String owner_id) {
+        try {
+            Connection con = DB_Connection.getConnection();
+            Statement stmt = con.createStatement();
+            String update = "DELETE FROM bookings WHERE owner_id=" + owner_id;
+            stmt.executeUpdate(update);
+        } catch (SQLException | ClassNotFoundException ex) {
+            Logger.getLogger(EditReviewsTable.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void deleteBookingKeeper(String keeper_id) {
+        try {
+            Connection con = DB_Connection.getConnection();
+            Statement stmt = con.createStatement();
+            String update = "DELETE FROM bookings WHERE keeper_id=" + keeper_id;
+            stmt.executeUpdate(update);
+        } catch (SQLException | ClassNotFoundException ex) {
+            Logger.getLogger(EditReviewsTable.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
     /**
      * Establish a database connection and add in the database.
      *
