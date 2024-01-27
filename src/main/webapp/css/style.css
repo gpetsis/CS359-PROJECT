@@ -64,6 +64,13 @@ body {
     align-items: center;
 }
 
+#ajaxNumberOfKeepings {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    align-items: center;
+}
+
 form {
     font-weight: bolder;
     font-size: large;
@@ -164,7 +171,7 @@ table {
     font-size: x-large;
 }
 
-#ajaxContent, #ajaxContentRequests, #ajaxContentCurrentKeeping, #ajaxContent2, #ajaxContent3, #ajaxContent4, #ajaxContent5, #ajaxContent6, #keepers, #ajaxContent7, #chatGPTdiv{
+#ajaxContent, #ajaxContentRequests, #ajaxContentCurrentKeeping, #ajaxContent2, #ajaxContent3, #ajaxContent4, #ajaxContent5, #ajaxContent6, #keepers, #ajaxContent7, #chatGPTdiv, #messageDiv{
     display: flex;
     flex-direction: column;
     align-items: center;

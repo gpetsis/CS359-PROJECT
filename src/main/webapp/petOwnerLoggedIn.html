@@ -79,6 +79,21 @@
             <div id="ajaxContent2"></div>
             
         </form>
+        <div id="update-pet-div">
+            <h2>Update pet</h2>
+            <div>
+                <label for="pet-id">Pet id: </label>
+                <input name="pet-id" id="update-pet-id">
+            </div>
+            
+            <div>
+                <label for="weight">Weight: </label>
+                <input type="number" min="1" value="1" name="weight" id="update-pet-weight">
+            </div>
+            
+            <input type="button" id="update-pet-button" value="Update Pet" onclick="handle_update_pet()">
+            <div id="ajaxContent-update"></div>
+        </div>
         <br>
         <label id="labelFinished" style="display: none">Your Current Booking : </label>
         <br>
