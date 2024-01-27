@@ -205,7 +205,7 @@ function checkPet(){
     xhr.open('GET', 'Pet');
     xhr.setRequestHeader("owner_id", owner_id);
     xhr.setRequestHeader("Return", "Type");
-
+    xhr.setRequestHeader("Pet-Id", "-");
     xhr.setRequestHeader("Content-type", "application/json");
     xhr.send();
 }
@@ -240,9 +240,10 @@ function get_pet_id(){
             return;
         }
     };
-    xhr.open('GET', 'Pet');
+    xhr.open('GET', 'PetServlet');
     xhr.setRequestHeader("owner_id", owner_id);
     xhr.setRequestHeader("Return", "pet_id");
+    xhr.setRequestHeader("Pet-Id", "-");
     xhr.setRequestHeader("Content-type", "application/json");
     xhr.send();
 }
@@ -257,7 +258,7 @@ function createTableFromJSONKeepers(data) {
         }
         else{
             html += "<tr><td>" + data[i]["username"] + "</td><td>" + data[i]["email"] + "</td>\n\
-            <td><p class='cost_per_day'>" + data[i]["catprice"] + "</p></td><td><p class='cost'>" + data[i]["dogprice"] + "</p></td><td><input type='button' \n\
+            <td><p class='cost_per_day'>" + data[i]["catprice"] + "</p></td><td><p class='cost'>" + data[i]["catprice"] + "</p></td><td><input type='button' \n\
             onclick='ownerRequest(" + data[i]["keeper_id"] + "," + data[i]["catprice"] + ")' value='book'></td></tr>";
         }
     }
@@ -266,7 +267,6 @@ function createTableFromJSONKeepers(data) {
 }
 
 async function book(keeper_id, price){
-    get_pet_id();
     await new Promise(r => setTimeout(r, 1000));
     var fromDateValue = document.getElementById('fromDate').value;
     var toDateValue = document.getElementById('toDate').value;
@@ -485,6 +485,7 @@ function getSelectedRating() {
 async function doRequests(){
     findUserData();
     await new Promise(r => setTimeout(r, 1000));
+    get_pet_id();
     activeBooking();
     await new Promise(r => setTimeout(r, 1000));
     getFinishedBooking();
@@ -591,9 +592,7 @@ function sendMessage(){
 }
 
 function handle_update_pet() {
-    let pet_id = document.getElementById('update-pet-id').value;
     let weight = document.getElementById('update-pet-weight').value;
-    
     const xhr = new XMLHttpRequest();
     xhr.onload = function () {
         if (xhr.readyState === 4 && xhr.status === 200) {
@@ -613,7 +612,6 @@ function handle_update_pet() {
     }
     
     xhr.open("PUT", "http://localhost:4567/petWeight/" + pet_id + "/" + weight);
-    
     xhr.setRequestHeader("Accept", "application/json");
     xhr.setRequestHeader("Content-Type", "application/json");
     xhr.send();
