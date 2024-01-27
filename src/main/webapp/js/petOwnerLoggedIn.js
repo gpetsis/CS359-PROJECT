@@ -17,6 +17,8 @@ function findUserData(){
 }
 
 var owner_id;
+var lat;
+var lon;
 
 function createTableFromJSON(data) {
     var html = "<table id='myTable'>";
@@ -24,6 +26,12 @@ function createTableFromJSON(data) {
         var value = data[category];
         if(category == "owner_id"){
             owner_id = value;
+        }
+        else if(category == "lat"){
+            lat = value;
+        }
+        else if(category == "lon"){
+            lon = value;
         }
         if (category == "username" || category == "email" || category == "owner_id") {
             html += "<tr><td>" + category + "</td><td>" + value + "</td></tr>";
@@ -184,14 +192,8 @@ function checkPet(){
         if (xhr.readyState === 4 && xhr.status === 200) {
             petType = xhr.responseText;
             console.log(xhr.responseText);
-            var fromDate = document.getElementById('fromDate');
-            var toDate = document.getElementById('toDate');
-            var fromDateLabel = document.getElementById('fromDateLabel');
-            var toDateLabel = document.getElementById('toDateLabel');
-            fromDate.style.display = 'block';
-            toDate.style.display = 'block';
-            fromDateLabel.style.display = 'block';
-            toDateLabel.style.display = 'block';
+            var dates = document.getElementById('dates');
+            dates.style.display = 'block';
             showAvailableKeepers(xhr.responseText);
         } else if (xhr.status !== 200) {
             $("#ajaxContent3").html("You don't have a pet");
@@ -206,13 +208,15 @@ function checkPet(){
     xhr.send();
 }
 
+var keepers;
+
 function showAvailableKeepers(type){
     var xhr = new XMLHttpRequest();
     xhr.onload = function () {
         if (xhr.readyState === 4 && xhr.status === 200) {
-            var users = JSON.parse(xhr.responseText);
-            console.log(users);
-            $("#ajaxContent3").html(createTableFromJSONKeepers(users));
+            keepers = JSON.parse(xhr.responseText);
+            console.log(keepers);
+            $("#ajaxContent3").html(createTableFromJSONKeepers(keepers));
         } else if (xhr.status !== 200) {
             return;
         }
@@ -582,4 +586,101 @@ function sendMessage(){
     xhr.open('POST', 'MessageServlet');
     xhr.setRequestHeader("Content-type", "application/json");
     xhr.send(JSON.stringify(jsonData));
+}
+
+var requested = false;
+
+async function handleRadioButtonChange() {
+    var selectedOption = document.querySelector('input[name="sortingOption"]:checked').value;
+    switch (selectedOption) {
+        case "distance":
+            console.log("Sorting by Distance");
+            if(requested == false){
+                request();
+                requested = true;
+                await new Promise(r => setTimeout(r, 5000));
+            }
+            sortByDistance();
+            break;
+        case "duration":
+            console.log("Sorting by Duration");
+            if(requested == false){
+                request(keepers);
+                requested = true;
+                await new Promise(r => setTimeout(r, 5000));
+            }
+            sortByDuration();
+            break;
+        case "price":
+            console.log("Sorting by Price");
+            sortByPrice();
+            break;
+        default:
+            console.log("Invalid option");
+            break;
+    }
+}
+
+function sortByPrice() {
+    if(petType == "dog"){
+        keepers.sort((a, b) => a.dogprice - b.dogprice);
+    }
+    else{
+        keepers.sort((a, b) => a.catprice - b.catprice);
+    }
+    $("#ajaxContent3").html(" ");
+    $("#ajaxContent3").html(createTableFromJSONKeepers(keepers));
+}
+
+async function makeRequest(obj) {
+    const data = null;
+    const xhr = new XMLHttpRequest();
+    xhr.withCredentials = true;
+    xhr.addEventListener("readystatechange", function () {
+        if (this.readyState === this.DONE) {
+            obj.newField = this.responseText;
+            console.log(obj.newField);
+        }
+    });
+    const destinationLat = obj.lat;
+    const destinationLon = obj.lon;
+    const url = `https://trueway-matrix.p.rapidapi.com/CalculateDrivingMatrix?origins=${lat},${lon}&destinations=${destinationLat},${destinationLon}`;
+    xhr.open("GET",url);
+    xhr.setRequestHeader("x-rapidapi-host", "trueway-matrix.p.rapidapi.com");
+    const key = "a6274b88e4mshee7fe03b54478e0p102465jsnd0d029e848d8";
+    xhr.setRequestHeader("x-rapidapi-key", key);
+    xhr.send(data);
+    await new Promise(resolve => setTimeout(resolve, 1000));
+}
+
+async function request(){
+    for (const obj of keepers) {
+        await makeRequest(obj);
+    }
+}
+
+function sortByDistance() {
+    keepers.sort((a, b) => {
+        const newFieldA = JSON.parse(a.newField);
+        const newFieldB = JSON.parse(b.newField);
+        const distancesA = newFieldA.distances[0][0];
+        const distancesB = newFieldB.distances[0][0];
+        return distancesA - distancesB; 
+    });
+    $("#ajaxContent3").html(" ");
+    $("#ajaxContent3").html(createTableFromJSONKeepers(keepers));
+    console.log("Sorted by Distance");
+}
+
+function sortByDuration() {
+    keepers.sort((a, b) => {
+        const newFieldA = JSON.parse(a.newField);
+        const newFieldB = JSON.parse(b.newField);
+        const durationsA = newFieldA.durations[0][0];
+        const durationsB = newFieldB.durations[0][0];
+        return durationsA - durationsB; 
+    });
+    $("#ajaxContent3").html(" ");
+    $("#ajaxContent3").html(createTableFromJSONKeepers(keepers));
+    console.log("Sorted by Time");
 }
