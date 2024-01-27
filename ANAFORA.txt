@@ -1,0 +1,217 @@
+● Πόσα, ποια και με τι αρμοδιότητα servlets χρησιμοποιήσαμε: 
+- Admin -> Χρησιμοποιήθηκε για να διαχειριστεί τις διεργασίες του Admin. (View owners-keepers, delete owners-keepers, show statistics)
+- BookingServlet -> Χρησιμοποιήθηκε για να διαχειριστεί το γεγονός του Booking (Και από την μερία του owner -> book, και από την μερία του keeper -> Accept/Reject booking)
+- Keeper -> Χρησιμοποιήθηκε για να διαχειριστεί τις ευρύτερες διεργασίες που έχουν να κάνουν με τον keeper (Show bookings of specific keeper)
+- LoggedIn -> Χρησιμοποιήθηκε για να διαχειριστεί τις ευρύτερες διεργασίες που έχουν να κάνουν με το Login (PetOwner login, PetKeeper login)
+- Login -> Χρησιμοποιήθηκε για να διαχειριστεί τις ευρύτερες διεργασίες που έχουν να κάνουν με στοιχεία για τους Keepers (Number Of Cats, Number Of Dogs, Total Earnings...)
+- Logout -> Χρησιμοποιήθηκε για να διαχειριστεί την διαδικασία του Logout
+- MessageServlet -> Χρησιμοποιήθηκε για να διαχειριστεί τις ευρύτερες διεργασίες που έχουν να κάνουν με τα μυνήματα ανάμεσα σε Owners και Keepers
+- PetServlet -> Χρησιμοποιήθηκε για να διαχειριστεί τις ευρύτερες διεργασίες που έχουν να κάνουν με τα Pets (Get pet of owner, get pet with Id)
+- Register -> Χρησιμοποιήθηκε για να διαχειριστεί τις ευρύτερες διεργασίες που έχουν να κάνουν με το Register (PetOwner register, PetKeeper register)
+- ReviewServlet -> Χρησιμοποιήθηκε για να διαχειριστεί τις ευρύτερες διεργασίες που έχουν να κάνουν με τις κριτικές (PetOwner side)
+
+● Πόσα, ποια και με τι αρμοδιότητα JavaScript Libraries/html/jsp χρησιμοποιήσαμε:
+
+	Χρησιμοποιήσαμε την βιβλιοθήκη JQuery, για να διευκολύνουμε την πρόσβαση στα DOM Elements.
+
+● Πόσα, ποια και με τι αρμοδιότητα css χρησιμοποιήσατε:
+
+	Χρησιμοποιήσαμε ένα αρχείο CSS το οποίο περιείχε όλα τα styles για όλα τα DOM Elements.
+
+● Τι κάναμε στην πλευρά του client με javascript:
+
+	Κάναμε όλες τις λειτουργίες που έχουν να κάνουν με την επαφή του χρήστη με τα servlets, και κατ' επέκταση με την βάση.
+
+
+● Ποια είναι τα Ajax τμήματα της εφαρμογής μας:
+
+	Χρησιμοποιήσαμε Ajax, για ότι έχει να κάνει με δυναμική προσθήκη στοιχείων στην σελίδα HTML (Μυνήματα επιτυχίας/αποτυχίας, απαντήσεις των request...)
+
+● Που χρησιμοποιήσαμε REST requests:
+
+	Χρησιμοποιήσαμε REST requests για την προσθήκη και επεξεργασία των Pets.
+
+
+● Ποια APIs χρησιμοποιήσαμε:
+
+	Χρησιμοποιήσαμε το OpenMapsAPI για την προβολή χαρτών, το TrueWayMatrix API για να υπολογίσουμε την απόσταση των keepers απο τον owner, και το ChatGPT API για να κάνουμε ερωτήσεις στο ChatGPT και να τις προβάλει στην σελίδα μας.
+
+● Χρειάστηκε να κάνουμε αλλαγές/προσθήκες στο σχήμα της βάσης:
+
+	Προσθέσαμε τον όρο ON CASCADE στα FOREIGN πεδία, ώστε όταν κάνει διαγραφή χρήστη ο Admin, να διαγράφεται και από τα άλλα tables.
+
+
+Κλάσεις και μεθόδοι:
+
+EditBookingsTable:
+	-addBookingFromJSON
+	-databaseToBooking
+	-jsonToBooking
+	-bookingToJSON
+	-updateBooking
+	-getTotalBookingsFinished
+	-setStatusFinished
+	-createBookingTable
+	-totalEarnings
+	-keeperAvailable
+	-getKeeperRequests
+	-getKeeperCurrentKeeping
+	-ownerRequest
+	-deleteBookingOwner
+	-deleteBookingKeeper
+	-createNewBooking
+
+EditMessagesTable:
+	-addMessageFromJSON
+	-jsonToMessage
+	-messageToJSON
+	-databaseToMessage
+	-createMessageTable
+	-createNewMessage
+
+EditPetKeepersTable:
+	-addPetKeeperFromJSON
+	-jsonToPetKeeper
+	-petKeeperToJSON
+	-deletePetKeeper
+	-updatePetKeeper (Overloaded)
+	-printPetKeeperDetails
+	-databaseToPetKeepers (Overloaded)
+	-numberOfKeepers
+	-getAvailableKeepers
+	-getKeepers
+	-databasePetKeeperToJSON
+	-getKeepersById
+	-createPetKeepersTable
+	-addNewPetKeeper
+
+EditPetOwnersTable:
+	-addPetOwnerFromJSON
+	-jsonToPetOwner
+	-petOwnerToJSON
+	-deletePetOwner
+	-updatePetOwner
+	-numberOfOwners
+	-getOwners
+	-databaseToPetOwners (Overloaded)
+	-databasePetOwnerToJSON
+	-updatePetOwner
+	-createPetOwnersTable
+	-addNewPetOwner
+
+EditPetsTable:
+	-addPetFromJSON
+	-jsonToPet
+	-petToJSON
+	-databaseToPets
+	-numberOfCats
+	-numberOfDogs
+	-databaseToPets (Overloaded)
+	-petOfOwner
+	-petWithId
+	-databaseToPets
+	-updatePet
+	-deletePet
+	-createPetsTable
+	-createNewPet
+
+EditReviewsTable:
+	-addReviewFromJSON
+	-jsonToReview
+	-reviewToJSON
+	-databaseTokeeperReviews
+	-createReviewTable
+	-createNewReview
+	-updateReviewText
+	-deleteReviewOwner
+	-deleteReviewKeeper
+	-updateReviewScore
+	-getReviewId
+
+Booking:
+	-Setters
+	-Getters
+
+Message:
+	-Setters
+	-Getters
+
+Pet:
+	-Setters
+	-Getters
+
+PetKeeper:
+	-Setters
+	-Getters
+
+PetOwner:
+	-Setters
+	-Getters
+
+Review:
+	-Setters
+	-Getters
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
