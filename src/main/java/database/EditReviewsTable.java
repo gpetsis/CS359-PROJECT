@@ -104,7 +104,6 @@ public class EditReviewsTable {
                     + "'" + rev.getReviewText() + "',"
                     + "'" + rev.getReviewScore() + "'"
                     + ")";
-            //stmt.execute(table);
             System.out.println(insertQuery);
             stmt.executeUpdate(insertQuery);
             System.out.println("# The review was successfully added in the database.");
@@ -125,6 +124,28 @@ public class EditReviewsTable {
         stmt.executeUpdate(updateQuery);
         stmt.close();
         con.close();
+    }
+
+    public void deleteReviewOwner(String owner_id) {
+        try {
+            Connection con = DB_Connection.getConnection();
+            Statement stmt = con.createStatement();
+            String update = "DELETE FROM reviews WHERE owner_id=" + owner_id;
+            stmt.executeUpdate(update);
+        } catch (SQLException | ClassNotFoundException ex) {
+            Logger.getLogger(EditReviewsTable.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void deleteReviewKeeper(String keeper_id) throws SQLException, ClassNotFoundException {
+        try {
+            Connection con = DB_Connection.getConnection();
+            Statement stmt = con.createStatement();
+            String update = "DELETE FROM reviews WHERE keeper_id=" + keeper_id;
+            stmt.executeUpdate(update);
+        } catch (SQLException | ClassNotFoundException ex) {
+            Logger.getLogger(EditReviewsTable.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     public void updateReviewScore(Review r, String review_id) throws SQLException, ClassNotFoundException {

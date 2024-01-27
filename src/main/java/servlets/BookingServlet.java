@@ -7,9 +7,12 @@ package servlets;
 
 import database.EditBookingsTable;
 import database.EditPetKeepersTable;
+import database.EditReviewsTable;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -27,6 +30,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import mainClasses.Booking;
+import mainClasses.Review;
 
 @WebServlet(name = "BookingServlet", urlPatterns = {"/BookingServlet"})
 public class BookingServlet extends HttpServlet {
@@ -112,8 +116,8 @@ public class BookingServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-//        PrintStream fileOut = new PrintStream(new File("C:\\Users\\Nikos Lasithiotakis\\Desktop\\CSD\\5ο Εξάμηνο\\ΗΥ359\\CS359-PROJECT\\src\\main\\webapp\\logfile.txt"));
-//        System.setOut(fileOut);
+        PrintStream fileOut = new PrintStream(new File("C:\\CSD\\PENDING\\HY-359\\PROJECT\\CS359-PROJECT\\src\\main\\webapp\\logfile.txt"));
+        System.setOut(fileOut);
         String header = request.getHeader("Request-Type");
         if (header.equals("Get-Keeping")) {
             try {
@@ -128,27 +132,42 @@ public class BookingServlet extends HttpServlet {
                 Logger.getLogger(BookingServlet.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else if (header.equals("Get-Statistics")) {
-            String keeper_id = request.getHeader("Keeper-Id");
-            EditBookingsTable ebt = new EditBookingsTable();
-            ArrayList<Booking> bookings = ebt.getTotalBookingsFinished(keeper_id);
-            int numberOfBookings = bookings.size();
-            int numberOfDays = 0;
+            try {
+                String keeper_id = request.getHeader("Keeper-Id");
+                EditBookingsTable ebt = new EditBookingsTable();
+                ArrayList<Booking> bookings = ebt.getTotalBookingsFinished(keeper_id);
+                int numberOfBookings = bookings.size();
+                int numberOfDays = 0;
 
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-            Booking booking;
-            for (int i = 0; i < numberOfBookings; i++) {
-                booking = bookings.get(i);
-                LocalDate fromDate = LocalDate.parse(booking.getFromDate(), formatter);
-                LocalDate toDate = LocalDate.parse(booking.getToDate(), formatter);
+                Booking booking;
+                for (int i = 0; i < numberOfBookings; i++) {
+                    booking = bookings.get(i);
+                    LocalDate fromDate = LocalDate.parse(booking.getFromDate(), formatter);
+                    LocalDate toDate = LocalDate.parse(booking.getToDate(), formatter);
 
-                long daysDifference = ChronoUnit.DAYS.between(fromDate, toDate);
-                numberOfDays += daysDifference;
+                    long daysDifference = ChronoUnit.DAYS.between(fromDate, toDate);
+                    numberOfDays += daysDifference;
+                }
+
+                EditReviewsTable ert = new EditReviewsTable();
+
+                ArrayList<Review> reviews = ert.databaseTokeeperReviews(keeper_id);
+
+                ArrayList<String> reviewsToString = new ArrayList<String>();
+                String tempReview;
+                for (int k = 0; k < reviews.size(); k++) {
+                    tempReview = ert.reviewToJSON(reviews.get(k));
+                    reviewsToString.add(tempReview);
+                }
+
+                System.out.println("{\"numberOfDays\":\"" + numberOfDays + "\", \"numberOfBookings\":\"" + numberOfBookings + "\", \"reviews\": " + reviewsToString.toString() + "}");
+
+                response.getWriter().write("{\"numberOfDays\":\"" + numberOfDays + "\", \"numberOfBookings\":\"" + numberOfBookings + "\", \"reviews\": " + reviewsToString.toString() + "}");
+            } catch (SQLException | ClassNotFoundException ex) {
+                Logger.getLogger(BookingServlet.class.getName()).log(Level.SEVERE, null, ex);
             }
-
-            System.out.println(numberOfBookings);
-            System.out.println(numberOfDays);
-            response.getWriter().write("{\"numberOfDays\":\"" + numberOfDays + "\", \"numberOfBookings\":\"" + numberOfBookings + "\"}");
         } else if (header.equals("FinishedBookings")) {
             String owner_id = request.getHeader("owner_id");
             System.out.println(owner_id);
