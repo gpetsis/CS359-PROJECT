@@ -137,8 +137,8 @@ function drawChartEarnings() {
     data.addColumn('string', "Earnings");
     data.addColumn('number', "Total earnings");
     data.addRows([
-        ["App", (85/100) * totalEarnings],
-        ["Keeper", (15/100) * totalEarnings],
+        ["App", (15/100) * totalEarnings],
+        ["Keeper", (85/100) * totalEarnings],
     ]);
 
     var options = {
@@ -186,9 +186,9 @@ function adminRemoveUser(user) {
     var xhr = new XMLHttpRequest();
     xhr.onload = function () {
         if (xhr.readyState === 4 && xhr.status === 200) {
-            var response = xhr.responseText;
-            console.log(response);
+            $("#messageDiv").html("<h4>User deleted</h4>");
         } else if (xhr.status !== 200) {
+            $("#messageDiv").html("<h3>Error deleting user</h3>");
             return;
         }
     };

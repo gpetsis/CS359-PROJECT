@@ -3,8 +3,10 @@ package servlets;
 import database.EditPetKeepersTable;
 import database.EditPetOwnersTable;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -73,6 +75,8 @@ public class Admin extends HttpServlet {
 
     @Override
     protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        PrintStream fileOut = new PrintStream(new File("C:\\CSD\\PENDING\\HY-359\\PROJECT\\CS359-PROJECT\\src\\main\\webapp\\logfile.txt"));
+        System.setOut(fileOut);
         String requestString = "";
 
         BufferedReader in = new BufferedReader(new InputStreamReader(request.getInputStream()));
@@ -83,13 +87,12 @@ public class Admin extends HttpServlet {
         }
 
         if (requestString.contains("owner_id")) {
-
             try {
                 EditPetOwnersTable epo = new EditPetOwnersTable();
                 PetOwner owner = epo.jsonToPetOwner(requestString);
                 epo.deletePetOwner(owner.getOwnerId());
             } catch (SQLException | ClassNotFoundException ex) {
-                System.out.println("Error: " + ex);
+                System.out.println("Error Owner: " + ex);
                 Logger.getLogger(Admin.class.getName()).log(Level.SEVERE, null, ex);
             }
 
@@ -101,7 +104,7 @@ public class Admin extends HttpServlet {
                 PetKeeper keeper = epk.jsonToPetKeeper(requestString);
                 epk.deletePetKeeper(keeper.getKeeperId());
             } catch (SQLException | ClassNotFoundException ex) {
-                System.out.println("Error: " + ex);
+                System.out.println("Error Gamweton mountanton: " + ex);
                 Logger.getLogger(Admin.class.getName()).log(Level.SEVERE, null, ex);
             }
 
