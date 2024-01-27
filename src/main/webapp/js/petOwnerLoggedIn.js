@@ -205,7 +205,7 @@ function checkPet(){
     xhr.open('GET', 'Pet');
     xhr.setRequestHeader("owner_id", owner_id);
     xhr.setRequestHeader("Return", "Type");
-
+    xhr.setRequestHeader("Pet-Id", "-");
     xhr.setRequestHeader("Content-type", "application/json");
     xhr.send();
 }
@@ -258,7 +258,7 @@ function createTableFromJSONKeepers(data) {
         }
         else{
             html += "<tr><td>" + data[i]["username"] + "</td><td>" + data[i]["email"] + "</td>\n\
-            <td><p class='cost_per_day'>" + data[i]["catprice"] + "</p></td><td><p class='cost'>" + data[i]["dogprice"] + "</p></td><td><input type='button' \n\
+            <td><p class='cost_per_day'>" + data[i]["catprice"] + "</p></td><td><p class='cost'>" + data[i]["catprice"] + "</p></td><td><input type='button' \n\
             onclick='ownerRequest(" + data[i]["keeper_id"] + "," + data[i]["catprice"] + ")' value='book'></td></tr>";
         }
     }
