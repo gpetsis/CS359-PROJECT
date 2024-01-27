@@ -8,6 +8,9 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
@@ -57,14 +60,23 @@ public class Admin extends HttpServlet {
                 String keeperJSON = epk.petKeeperToJSON(keeper);
                 users.add(keeperJSON);
             }
-
-            response.getWriter().write(users.toString());
+            if (type.equals("GuestPage")) {
+                List<String> onlyKeepers = removeDuplicates(users);
+                response.getWriter().write(onlyKeepers.toString());
+            } else {
+                response.getWriter().write(users.toString());
+            }
             System.out.println(users.toString());
         } catch (SQLException | ClassNotFoundException ex) {
             Logger.getLogger(Admin.class.getName()).log(Level.SEVERE, null, ex);
             System.out.println("error: " + ex);
         }
 
+    }
+
+    public static List<String> removeDuplicates(List<String> list) {
+        Set<String> set = new HashSet<>(list);
+        return new ArrayList<>(set);
     }
 
     @Override
